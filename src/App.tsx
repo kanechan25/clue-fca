@@ -1,33 +1,54 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { CounterStoreProvider } from '@/provider/counterProvider'
+import { Toaster } from 'react-hot-toast'
 import { QueryProvider } from '@/provider/queryProvider'
+import { useFitnessStore } from '@/stores/fitnessStore'
+import { Onboarding } from '@/components/Onboarding'
 import { routers } from '@/routes/routes'
 import './assets/css/App.css'
-import mixpanel from 'mixpanel-browser'
-
-if (import.meta.env.NODE_ENV === 'production') {
-  mixpanel.init(import.meta.env.VITE_MIXPANEL_TOKEN, {
-    track_pageview: true,
-    persistence: 'localStorage',
-    debug: false,
-  })
-}
 
 function App() {
+  const { user, isOnboarded } = useFitnessStore()
+
+  // Show onboarding if user hasn't completed it
+  if (!isOnboarded || !user) {
+    return (
+      <>
+        <Onboarding />
+        <Toaster
+          position='top-right'
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+          }}
+        />
+      </>
+    )
+  }
+
   return (
     <QueryProvider>
-      <CounterStoreProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route>
-              {routers.map((route) => (
-                <Route key={route.id} path={route.href} element={route.element} />
-              ))}
-              <Route path='*' element={<Navigate to='/' replace />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </CounterStoreProvider>
+      <BrowserRouter>
+        <Routes>
+          {routers.map((route) => (
+            <Route key={route.id} path={route.href} element={route.element} />
+          ))}
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
+      </BrowserRouter>
+
+      <Toaster
+        position='top-right'
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
     </QueryProvider>
   )
 }
