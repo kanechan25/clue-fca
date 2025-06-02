@@ -144,7 +144,7 @@ const HomePage = () => {
             transition={{ delay: 0.2 }}
             className='bg-white rounded-lg shadow-md p-6'
           >
-            <div className='flex items-center'>
+            <div className='flex items-start'>
               <div className='p-3 bg-green-100 rounded-lg'>
                 <TrendingUp className='w-6 h-6 text-green-600' />
               </div>

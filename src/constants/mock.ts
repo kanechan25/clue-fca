@@ -62,6 +62,21 @@ export const mockChallenges: Challenge[] = [
     isActive: true,
     imageUrl: '⚖️',
   },
+  {
+    id: '5',
+    name: 'Workout Time',
+    description: 'Workout for 30 minutes daily for 21 days',
+    type: 'workout_time',
+    goal: 30,
+    unit: Unit.MINUTES,
+    duration: 21,
+    startDate: new Date(),
+    endDate: addDays(new Date(), 21),
+    participants: ['user1', 'user2', 'user5', 'user6', 'user8', 'user9', 'user10'],
+    creator: 'FitnessApp',
+    isActive: true,
+    imageUrl: '💪',
+  },
 ]
 
 export const mockUsers: User[] = [
