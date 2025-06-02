@@ -140,6 +140,8 @@ export const useFitnessStore = create<FitnessStore>()(
             },
           }
         })
+
+        get().generateLeaderboard(challengeId)
       },
 
       updateProgress: (challengeId: string, date: string, value: number, notes?: string) => {
@@ -153,7 +155,6 @@ export const useFitnessStore = create<FitnessStore>()(
 
         // Generate mock progress that respects the challenge unit and goal
         const generateMockProgress = (challengeGoal: number, challengeDuration: number, unit: string) => {
-          // Base multiplier for different units
           let baseMultiplier = 1
           switch (unit) {
             case 'steps':
@@ -175,17 +176,21 @@ export const useFitnessStore = create<FitnessStore>()(
           return challengeGoal * challengeDuration * baseMultiplier
         }
 
-        // Get 5 random mock users from participants
-        const challengeParticipants = mockUsers.filter((user) => {
-          // Ensure participants is an array and includes the user
-          return Array.isArray(challenge?.participants) && challenge.participants.includes(user.id)
-        })
+        // Always generate exactly 5 mock competitors
+        // First try from participants, fallback to all mock users if not enough
+        let availableMockUsers = mockUsers
+        if (Array.isArray(challenge?.participants) && challenge.participants.length > 0) {
+          const participantUsers = mockUsers.filter((user) => challenge.participants.includes(user.id))
+          if (participantUsers.length >= 5) {
+            availableMockUsers = participantUsers
+          }
+        }
 
-        // Shuffle and take up to 5 participants
-        const shuffledParticipants = [...challengeParticipants].sort(() => Math.random() - 0.5).slice(0, 5)
+        // Shuffle and take exactly 5 mock users for competition
+        const mockCompetitors = [...availableMockUsers].sort(() => Math.random() - 0.5).slice(0, 5)
 
-        // Create entries for mock users
-        const mockEntries = shuffledParticipants.map((user) => {
+        // Create entries for all 5 mock competitors
+        const mockEntries = mockCompetitors.map((user) => {
           const mockProgress = generateMockProgress(challenge.goal, challenge.duration, challenge.unit)
           const userProgress: UserProgress = {
             challengeId,
@@ -202,24 +207,25 @@ export const useFitnessStore = create<FitnessStore>()(
           }
         })
 
-        // Add current user's real progress if they're participating
+        // ALWAYS include current user with their REAL progress if they have any progress at all
         const currentUser = state.user
         const currentUserProgress = state.userProgress[challengeId]
 
-        const allEntries = [...mockEntries]
+        const allCompetitors = [...mockEntries]
 
-        if (currentUser && currentUserProgress) {
-          allEntries.push({
+        // Add current user with their real progress (this is the key fix!)
+        if (currentUser && currentUserProgress && currentUserProgress.totalProgress > 0) {
+          allCompetitors.push({
             user: currentUser,
             progress: currentUserProgress,
           })
         }
 
-        // Sort by total progress (highest first) and assign ranks
-        allEntries.sort((a, b) => b.progress.totalProgress - a.progress.totalProgress)
+        // Sort by total progress (highest first) - this will rank everyone properly
+        allCompetitors.sort((a, b) => b.progress.totalProgress - a.progress.totalProgress)
 
-        // Take top 5 and create leaderboard entries
-        const leaderboard: LeaderboardEntry[] = allEntries.slice(0, 5).map((entry, index) => ({
+        // Take top 5 performers and create leaderboard entries
+        const leaderboard: LeaderboardEntry[] = allCompetitors.slice(0, 5).map((entry, index) => ({
           user: entry.user,
           progress: { ...entry.progress, rank: index + 1 },
           rank: index + 1,

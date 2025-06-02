@@ -7,6 +7,7 @@ import { UserSettings } from '@/components/UserSettings'
 import type { ChallengeType } from '@/types'
 import toast from 'react-hot-toast'
 import Dropdown from '@/components/Common/Dropdown'
+import { formatProgressWithUnit } from '@/utils/format'
 
 const filterOptions: { value: ChallengeType | 'all' | 'actives'; label: string; icon: string }[] = [
   { value: 'all', label: 'All Challenges', icon: '🎯' },
@@ -147,13 +148,18 @@ const HomePage = () => {
               <div className='p-3 bg-green-100 rounded-lg'>
                 <TrendingUp className='w-6 h-6 text-green-600' />
               </div>
-              <div className='ml-4'>
+              <div className='ml-4 flex-1'>
                 <p className='text-sm font-medium text-gray-600'>Total Progress</p>
-                <p className='text-2xl font-bold text-gray-900'>
-                  {Object.values(userProgress)
-                    .reduce((sum, progress) => sum + progress.totalProgress, 0)
-                    .toLocaleString()}
-                </p>
+                <div className='mt-1'>
+                  {formatProgressWithUnit(userProgress, challenges).map((formattedProgress, index) => (
+                    <div key={index} className='text-md font-sm text-gray-900'>
+                      {formattedProgress}
+                    </div>
+                  ))}
+                  {formatProgressWithUnit(userProgress, challenges).length === 0 && (
+                    <p className='text-md font-sm text-gray-900'>No active challenges</p>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>

@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
 import { Trophy, Medal, Award, Users } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import type { LeaderboardEntry, LeaderboardProps } from '@/types'
+import { Unit, type LeaderboardEntry, type LeaderboardProps } from '@/types'
 import { getRankBg } from '@/utils'
+import { formatNumberDecimal } from '@/utils/format'
 
 export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) => {
   const { leaderboards, challenges } = useFitnessStore()
@@ -79,7 +80,8 @@ export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) =
                   <div>
                     <p className='font-semibold text-gray-800'>{entry.user.name}</p>
                     <p className='text-sm text-gray-500'>
-                      {entry.progress.totalProgress.toLocaleString()} {challenge.unit}
+                      {formatNumberDecimal(entry?.progress?.totalProgress, challenge.unit === Unit.STEPS ? 0 : 1)}{' '}
+                      {challenge.unit}
                     </p>
                   </div>
                 </div>
