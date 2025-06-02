@@ -48,7 +48,7 @@ export const useFitnessStore = create<FitnessStore>()(
         const challenge: Challenge = {
           ...challengeData,
           id: crypto.randomUUID(),
-          participants: 0,
+          participants: [],
         }
         set((state) => ({
           challenges: [...state.challenges, challenge],
@@ -75,20 +75,35 @@ export const useFitnessStore = create<FitnessStore>()(
               [challengeId]: userProgress,
             },
             challenges: state.challenges.map((challenge) =>
-              challenge.id === challengeId ? { ...challenge, participants: challenge.participants + 1 } : challenge,
+              challenge.id === challengeId
+                ? {
+                    ...challenge,
+                    participants: Array.isArray(challenge.participants)
+                      ? [...challenge.participants, user.id]
+                      : [user.id],
+                  }
+                : challenge,
             ),
           }
         })
       },
 
       leaveChallenge: (challengeId: string) => {
+        const { user } = get()
+        if (!user) return
+
         set((state) => {
           const { [challengeId]: removed, ...restProgress } = state.userProgress
           return {
             userProgress: restProgress,
             challenges: state.challenges.map((challenge) =>
               challenge.id === challengeId
-                ? { ...challenge, participants: Math.max(0, challenge.participants - 1) }
+                ? {
+                    ...challenge,
+                    participants: Array.isArray(challenge?.participants)
+                      ? challenge.participants.filter((id) => id !== user.id)
+                      : [],
+                  }
                 : challenge,
             ),
           }
@@ -136,15 +151,47 @@ export const useFitnessStore = create<FitnessStore>()(
         const challenge = state.challenges.find((c) => c.id === challengeId)
         if (!challenge) return
 
-        // Mock leaderboard data
-        const leaderboard: LeaderboardEntry[] = mockUsers.slice(0, 5).map((user, index) => {
-          const mockProgress = Math.random() * challenge.goal * challenge.duration * 0.8
+        // Generate mock progress that respects the challenge unit and goal
+        const generateMockProgress = (challengeGoal: number, challengeDuration: number, unit: string) => {
+          // Base multiplier for different units
+          let baseMultiplier = 1
+          switch (unit) {
+            case 'steps':
+              baseMultiplier = Math.random() * 0.8 + 0.5 // 50-130% of daily goal
+              break
+            case 'miles':
+              baseMultiplier = Math.random() * 0.6 + 0.4 // 40-100% of daily goal
+              break
+            case 'calories':
+              baseMultiplier = Math.random() * 0.9 + 0.3 // 30-120% of daily goal
+              break
+            case 'lbs':
+              baseMultiplier = Math.random() * 0.7 + 0.2 // 20-90% of weekly goal
+              break
+            default:
+              baseMultiplier = Math.random() * 0.8 + 0.3
+          }
+
+          return challengeGoal * challengeDuration * baseMultiplier
+        }
+
+        // Get 5 random mock users from participants
+        const challengeParticipants = mockUsers.filter((user) => {
+          // Ensure participants is an array and includes the user
+          return Array.isArray(challenge?.participants) && challenge.participants.includes(user.id)
+        })
+
+        // Shuffle and take up to 5 participants
+        const shuffledParticipants = [...challengeParticipants].sort(() => Math.random() - 0.5).slice(0, 5)
+
+        // Create entries for mock users
+        const mockEntries = shuffledParticipants.map((user) => {
+          const mockProgress = generateMockProgress(challenge.goal, challenge.duration, challenge.unit)
           const userProgress: UserProgress = {
             challengeId,
             userId: user.id,
             dailyEntries: [],
             totalProgress: mockProgress,
-            rank: index + 1,
             joined: new Date(),
             completed: false,
           }
@@ -152,10 +199,32 @@ export const useFitnessStore = create<FitnessStore>()(
           return {
             user,
             progress: userProgress,
-            rank: index + 1,
-            badge: index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : undefined,
           }
         })
+
+        // Add current user's real progress if they're participating
+        const currentUser = state.user
+        const currentUserProgress = state.userProgress[challengeId]
+
+        const allEntries = [...mockEntries]
+
+        if (currentUser && currentUserProgress) {
+          allEntries.push({
+            user: currentUser,
+            progress: currentUserProgress,
+          })
+        }
+
+        // Sort by total progress (highest first) and assign ranks
+        allEntries.sort((a, b) => b.progress.totalProgress - a.progress.totalProgress)
+
+        // Take top 5 and create leaderboard entries
+        const leaderboard: LeaderboardEntry[] = allEntries.slice(0, 5).map((entry, index) => ({
+          user: entry.user,
+          progress: { ...entry.progress, rank: index + 1 },
+          rank: index + 1,
+          badge: index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : undefined,
+        }))
 
         set((state) => ({
           leaderboards: {
@@ -174,17 +243,25 @@ export const useFitnessStore = create<FitnessStore>()(
       },
 
       loadMockData: () => {
+        // Migrate challenges to ensure participants is always an array
+        const migratedChallenges = mockChallenges.map((challenge) => ({
+          ...challenge,
+          participants: Array.isArray(challenge.participants) ? challenge.participants : [],
+        }))
+
         set({
-          challenges: mockChallenges,
+          challenges: migratedChallenges,
         })
 
         // Generate leaderboards for all challenges
-        mockChallenges.forEach((challenge) => {
+        migratedChallenges.forEach((challenge) => {
           get().generateLeaderboard(challenge.id)
         })
       },
 
       resetStore: () => {
+        // Clear localStorage to remove any old cached data
+        localStorage.removeItem('fitness-challenge-store')
         set(initialState)
       },
     }),

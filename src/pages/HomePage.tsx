@@ -59,7 +59,10 @@ const HomePage = () => {
         case 'name':
           return a.name.localeCompare(b.name)
         case 'participants':
-          return b.participants - a.participants
+          return (
+            (Array.isArray(b?.participants) ? b.participants.length : 0) -
+            (Array.isArray(a?.participants) ? a.participants.length : 0)
+          )
         case 'recent':
         default:
           return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
@@ -71,9 +74,6 @@ const HomePage = () => {
 
   // Get joined challenges
   const joinedChallenges = challenges.filter((challenge) => userProgress[challenge.id])
-
-  // Get popular challenge for leaderboard preview
-  const popularChallenge = challenges.find((c) => c.participants > 100)
 
   const handleJoinChallenge = (challengeId: string) => {
     const challenge = challenges.find((c) => c.id === challengeId)
@@ -171,7 +171,13 @@ const HomePage = () => {
               <div className='ml-4'>
                 <p className='text-sm font-medium text-gray-600'>Total Participants</p>
                 <p className='text-2xl font-bold text-gray-900'>
-                  {challenges.reduce((sum, challenge) => sum + challenge.participants, 0).toLocaleString()}
+                  {challenges
+                    .reduce(
+                      (sum, challenge) =>
+                        sum + (Array.isArray(challenge?.participants) ? challenge.participants.length : 0),
+                      0,
+                    )
+                    .toLocaleString()}
                 </p>
               </div>
             </div>

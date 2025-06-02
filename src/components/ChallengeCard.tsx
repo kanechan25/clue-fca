@@ -71,7 +71,7 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
           </div>
           <div className='flex items-center space-x-2 text-sm text-gray-500'>
             <Users className='w-4 h-4' />
-            <span>{challenge.participants} participants</span>
+            <span>{Array.isArray(challenge?.participants) ? challenge.participants.length : 0} participants</span>
           </div>
           <div className='flex items-center space-x-2 text-sm text-gray-500'>
             <Calendar className='w-4 h-4' />

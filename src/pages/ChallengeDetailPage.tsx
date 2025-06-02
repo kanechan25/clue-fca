@@ -164,7 +164,9 @@ export const ChallengeDetailPage = () => {
                   <div className='text-blue-200 text-sm'>days remaining</div>
                 </div>
                 <div>
-                  <div className='text-2xl font-bold'>{challenge.participants}</div>
+                  <div className='text-2xl font-bold'>
+                    {Array.isArray(challenge?.participants) ? challenge.participants.length : 0}
+                  </div>
                   <div className='text-blue-200 text-sm'>participants</div>
                 </div>
                 <div>

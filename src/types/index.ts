@@ -34,7 +34,7 @@ export interface Challenge {
   duration: number // days
   startDate: Date
   endDate: Date
-  participants: number
+  participants: string[] // Array of user IDs who participate in this challenge
   creator: string
   isActive: boolean
   imageUrl?: string
