@@ -4,8 +4,10 @@ import { Search, Filter, Plus, Trophy, Users, TrendingUp } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ChallengeCard } from '@/components/ChallengeCard'
 import { Leaderboard } from '@/components/Leaderboard'
+import { UserSettings } from '@/components/UserSettings'
 import type { ChallengeType } from '@/types'
 import toast from 'react-hot-toast'
+import Dropdown from '@/components/Common/Dropdown'
 
 const filterOptions: { value: ChallengeType | 'all'; label: string; icon: string }[] = [
   { value: 'all', label: 'All Challenges', icon: '🎯' },
@@ -90,11 +92,8 @@ const HomePage = () => {
             </div>
 
             {user && (
-              <div className='flex items-center space-x-3'>
-                <div className='w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold'>
-                  {user.avatar || user.name.charAt(0)}
-                </div>
-                <span className='text-sm font-medium text-gray-700'>{user.name}</span>
+              <div className='flex items-center space-x-3 cursor-pointer'>
+                <UserSettings user={user} />
               </div>
             )}
           </div>
@@ -182,17 +181,17 @@ const HomePage = () => {
                     placeholder='Search challenges...'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full pl-10 pr-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                   />
                 </div>
 
                 {/* Filter */}
                 <div className='relative'>
-                  <Filter className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4' />
+                  <Filter className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 z-10' />
                   <select
                     value={selectedFilter}
                     onChange={(e) => setSelectedFilter(e.target.value as ChallengeType | 'all')}
-                    className='pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white'
+                    className='appearance-none bg-white border border-gray-300 text-gray-700 py-2.5 pl-10 pr-10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 transition-colors cursor-pointer'
                   >
                     {filterOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -200,25 +199,29 @@ const HomePage = () => {
                       </option>
                     ))}
                   </select>
+                  <Dropdown />
                 </div>
 
-                {/* Sort */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'name' | 'participants' | 'recent')}
-                  className='px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-                >
-                  <option value='recent'>Most Recent</option>
-                  <option value='participants'>Most Popular</option>
-                  <option value='name'>A-Z</option>
-                </select>
+                {/* Sort - Enhanced Dropdown */}
+                <div className='relative'>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'name' | 'participants' | 'recent')}
+                    className='appearance-none bg-white border border-gray-300 text-gray-700 py-2.5 pl-4 pr-10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 transition-colors cursor-pointer'
+                  >
+                    <option value='recent'>Most Recent</option>
+                    <option value='participants'>Most Popular</option>
+                    <option value='name'>A-Z</option>
+                  </select>
+                  <Dropdown />
+                </div>
               </div>
             </div>
 
             {/* Challenge Grid */}
             <div className='space-y-6'>
-              {filteredChallenges.length > 0 ? (
-                filteredChallenges.map((challenge, index) => (
+              {filteredChallenges?.length > 0 ? (
+                filteredChallenges?.map((challenge, index) => (
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}

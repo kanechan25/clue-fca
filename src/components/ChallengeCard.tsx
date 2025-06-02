@@ -124,7 +124,7 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleToggleJoin}
-          className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
+          className={`w-full py-3 px-4 cursor-pointer rounded-lg font-semibold transition-colors duration-200 ${
             isJoined
               ? 'bg-red-100 text-red-700 hover:bg-red-200'
               : `bg-gradient-to-r ${getTypeColor(challenge.type)} text-white hover:opacity-90`
