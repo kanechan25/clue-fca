@@ -2,23 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, ChevronLeft, Check, User, Target, Bell } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import type { OnboardingData, ChallengeType } from '@/types'
+import { type OnboardingData, type ChallengeType } from '@/types'
+import { challengeTypes, onboardSteps } from '@/constants'
 import toast from 'react-hot-toast'
-
-const steps = [
-  { id: 1, title: 'Welcome', icon: '👋' },
-  { id: 2, title: 'Profile', icon: '👤' },
-  { id: 3, title: 'Goals', icon: '🎯' },
-  { id: 4, title: 'Preferences', icon: '⚙️' },
-]
-
-const challengeTypes: { type: ChallengeType; label: string; icon: string; description: string }[] = [
-  { type: 'steps', label: 'Daily Steps', icon: '🚶', description: 'Track your daily walking goals' },
-  { type: 'distance', label: 'Running/Walking', icon: '🏃', description: 'Monitor distance covered' },
-  { type: 'calories', label: 'Calorie Burn', icon: '🔥', description: 'Track calories burned through activities' },
-  { type: 'weight_loss', label: 'Weight Management', icon: '⚖️', description: 'Monitor weight loss progress' },
-  { type: 'workout_time', label: 'Workout Time', icon: '💪', description: 'Track exercise duration' },
-]
 
 export const Onboarding = () => {
   const { completeOnboarding } = useFitnessStore()
@@ -32,7 +18,7 @@ export const Onboarding = () => {
   })
 
   const handleNext = () => {
-    if (currentStep < steps.length) {
+    if (currentStep < onboardSteps.length) {
       setCurrentStep(currentStep + 1)
     }
   }
@@ -136,7 +122,7 @@ export const Onboarding = () => {
                   onChange={handleNameChange}
                   onInput={handleNameChange}
                   placeholder='Enter your full name'
-                  className='w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
                   required
                   autoComplete='given-name'
                 />
@@ -153,7 +139,7 @@ export const Onboarding = () => {
                   onChange={handleEmailChange}
                   onInput={handleEmailChange}
                   placeholder='Enter your email address'
-                  className='w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
+                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
                   required
                   autoComplete='email'
                 />
@@ -178,7 +164,7 @@ export const Onboarding = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleGoalToggle(challengeType.type)}
-                  className={`p-4 cursor-pointer rounded-lg border-2 transition-all duration-200 text-left ${
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                     formData.fitnessGoals.includes(challengeType.type)
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 bg-white hover:border-gray-300'
@@ -215,7 +201,7 @@ export const Onboarding = () => {
                 <div className='grid grid-cols-2 gap-3'>
                   <button
                     onClick={() => setFormData((prev) => ({ ...prev, preferredUnits: 'metric' }))}
-                    className={`p-3 text-black cursor-pointer rounded-lg border-2 transition-all duration-200 ${
+                    className={`p-3 text-black rounded-lg border-2 transition-all duration-200 ${
                       formData.preferredUnits === 'metric'
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
@@ -228,7 +214,7 @@ export const Onboarding = () => {
                   </button>
                   <button
                     onClick={() => setFormData((prev) => ({ ...prev, preferredUnits: 'imperial' }))}
-                    className={`p-3 text-black cursor-pointer rounded-lg border-2 transition-all duration-200 ${
+                    className={`p-3 text-black rounded-lg border-2 transition-all duration-200 ${
                       formData.preferredUnits === 'imperial'
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
@@ -249,7 +235,7 @@ export const Onboarding = () => {
                 </div>
                 <button
                   onClick={() => setFormData((prev) => ({ ...prev, notificationsEnabled: !prev.notificationsEnabled }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                     formData.notificationsEnabled ? 'bg-blue-600' : 'bg-gray-300'
                   }`}
                 >
@@ -276,15 +262,15 @@ export const Onboarding = () => {
         <div className='bg-gray-100 p-4'>
           <div className='flex items-center justify-between mb-2'>
             <span className='text-sm font-medium text-gray-600'>
-              Step {currentStep} of {steps.length}
+              Step {currentStep} of {onboardSteps.length}
             </span>
-            <span className='text-sm text-gray-500'>{Math.round((currentStep / steps.length) * 100)}%</span>
+            <span className='text-sm text-gray-500'>{Math.round((currentStep / onboardSteps.length) * 100)}%</span>
           </div>
           <div className='w-full bg-gray-200 rounded-full h-2'>
             <motion.div
               className='bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full'
               initial={{ width: 0 }}
-              animate={{ width: `${(currentStep / steps.length) * 100}%` }}
+              animate={{ width: `${(currentStep / onboardSteps.length) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
           </div>
@@ -312,7 +298,7 @@ export const Onboarding = () => {
             whileTap={{ scale: 0.98 }}
             onClick={handlePrev}
             disabled={currentStep === 1}
-            className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
               currentStep === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -323,15 +309,15 @@ export const Onboarding = () => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={currentStep === steps.length ? handleComplete : handleNext}
+            onClick={currentStep === onboardSteps.length ? handleComplete : handleNext}
             disabled={!canProceed()}
-            className={`flex cursor-pointer items-center space-x-2 px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+            className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
               canProceed()
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            <span>{currentStep === steps.length ? 'Get Started' : 'Next'}</span>
+            <span>{currentStep === onboardSteps.length ? 'Get Started' : 'Next'}</span>
             <ChevronRight className='w-4 h-4' />
           </motion.button>
         </div>

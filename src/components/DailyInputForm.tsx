@@ -1,23 +1,19 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Save, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import toast from 'react-hot-toast'
+import { DailyInputFormProps } from '@/types'
 
-interface DailyInputFormProps {
-  challengeId: string
-  selectedDate?: string
-  onSuccess?: () => void
-}
-
-export const DailyInputForm = ({ challengeId, selectedDate, onSuccess }: DailyInputFormProps) => {
+export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) => {
   const { challenges, userProgress, addProgress } = useFitnessStore()
   const challenge = challenges.find((c) => c.id === challengeId)
   const progress = userProgress[challengeId]
+  const dateInputRef = useRef<HTMLInputElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
-  const [date, setDate] = useState(selectedDate || format(new Date(), 'yyyy-MM-dd'))
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [value, setValue] = useState('')
   const [notes, setNotes] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -77,6 +73,22 @@ export const DailyInputForm = ({ challengeId, selectedDate, onSuccess }: DailyIn
     setNotes('')
   }
 
+  const handleDateClick = () => {
+    const input = dateInputRef.current
+    if (input) {
+      try {
+        if ('showPicker' in input && typeof (input as any).showPicker === 'function') {
+          ;(input as any).showPicker()
+        } else {
+          input.focus()
+          input.click()
+        }
+      } catch {
+        input.focus()
+      }
+    }
+  }
+
   if (!isOpen) {
     return (
       <motion.button
@@ -100,7 +112,7 @@ export const DailyInputForm = ({ challengeId, selectedDate, onSuccess }: DailyIn
     >
       <div className='flex items-center justify-between mb-4'>
         <h3 className='text-lg font-semibold text-gray-800'>{existingEntry ? 'Update Progress' : 'Add Progress'}</h3>
-        <button onClick={handleClose} className='text-gray-400 hover:text-gray-600 transition-colors'>
+        <button onClick={handleClose} className='text-gray-800 hover:text-gray-600 transition-colors'>
           ✕
         </button>
       </div>
@@ -112,14 +124,26 @@ export const DailyInputForm = ({ challengeId, selectedDate, onSuccess }: DailyIn
             <Calendar className='w-4 h-4 inline mr-1' />
             Date
           </label>
-          <input
-            type='date'
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            max={format(new Date(), 'yyyy-MM-dd')}
-            className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-            required
-          />
+          <div className='relative flex'>
+            <input
+              type='date'
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              max={format(new Date(), 'yyyy-MM-dd')}
+              className='flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 transition-colors'
+              required
+              ref={dateInputRef}
+            />
+            <button
+              type='button'
+              onClick={handleDateClick}
+              className='px-3 py-2 bg-gray-50 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
+              title='Open calendar'
+            >
+              <Calendar className='w-4 h-4 text-gray-600' />
+            </button>
+          </div>
+          <p className='text-xs text-gray-500 mt-1'>Click the date field or calendar icon to open date picker</p>
         </div>
 
         {/* Value Input */}

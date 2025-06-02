@@ -1,14 +1,10 @@
 import { motion } from 'framer-motion'
 import { Trophy, Medal, Award, Users } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import type { LeaderboardEntry } from '@/types'
+import type { LeaderboardEntry, LeaderboardProps } from '@/types'
+import { getRankBg } from '@/utils'
 
-interface LeaderboardProps {
-  challengeId: string
-  maxEntries?: number
-}
-
-export const Leaderboard = ({ challengeId, maxEntries = 10 }: LeaderboardProps) => {
+export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) => {
   const { leaderboards, challenges } = useFitnessStore()
   const leaderboard = leaderboards[challengeId] || []
   const challenge = challenges.find((c) => c.id === challengeId)
@@ -29,19 +25,6 @@ export const Leaderboard = ({ challengeId, maxEntries = 10 }: LeaderboardProps) 
         return <Award className='w-5 h-5 text-amber-600' />
       default:
         return <span className='w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500'>#{rank}</span>
-    }
-  }
-
-  const getRankBg = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200'
-      case 2:
-        return 'bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200'
-      case 3:
-        return 'bg-gradient-to-r from-amber-50 to-amber-100 border-amber-200'
-      default:
-        return 'bg-white border-gray-200'
     }
   }
 

@@ -28,7 +28,13 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
-
+input,
+textarea {
+  color: #000;
+}
+button {
+  cursor: pointer;
+}
 /* Focus styles for accessibility */
 button:focus,
 input:focus,

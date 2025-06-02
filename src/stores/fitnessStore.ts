@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { addDays } from 'date-fns'
 import type {
   AppState,
   Challenge,
@@ -10,22 +9,9 @@ import type {
   ProgressInput,
   LeaderboardEntry,
   OnboardingData,
+  FitnessStore,
 } from '@/types'
-
-interface FitnessStore extends AppState {
-  // Actions
-  setUser: (user: User) => void
-  completeOnboarding: (data: OnboardingData) => void
-  addChallenge: (challenge: Omit<Challenge, 'id' | 'participants'>) => void
-  joinChallenge: (challengeId: string) => void
-  leaveChallenge: (challengeId: string) => void
-  addProgress: (input: ProgressInput) => void
-  updateProgress: (challengeId: string, date: string, value: number, notes?: string) => void
-  generateLeaderboard: (challengeId: string) => void
-  syncProgress: () => void
-  loadMockData: () => void
-  resetStore: () => void
-}
+import { mockChallenges, mockUsers } from '@/constants/mock'
 
 const initialState: AppState = {
   user: null,
@@ -37,78 +23,6 @@ const initialState: AppState = {
   isLoading: false,
   error: null,
 }
-
-// Mock data for development
-const mockChallenges: Challenge[] = [
-  {
-    id: '1',
-    name: '30-Day Step Challenge',
-    description: 'Walk 10,000 steps daily for 30 days. Join friends and track your progress!',
-    type: 'steps',
-    goal: 10000,
-    unit: 'steps',
-    duration: 30,
-    startDate: new Date(),
-    endDate: addDays(new Date(), 30),
-    participants: 157,
-    creator: 'FitnessApp',
-    isActive: true,
-    imageUrl: '🚶',
-  },
-  {
-    id: '2',
-    name: 'Marathon Prep',
-    description: 'Run 5 miles daily building up to marathon distance',
-    type: 'distance',
-    goal: 5,
-    unit: 'miles',
-    duration: 21,
-    startDate: new Date(),
-    endDate: addDays(new Date(), 21),
-    participants: 89,
-    creator: 'RunClub',
-    isActive: true,
-    imageUrl: '🏃',
-  },
-  {
-    id: '3',
-    name: 'Calorie Crusher',
-    description: 'Burn 500 calories daily through any activity',
-    type: 'calories',
-    goal: 500,
-    unit: 'calories',
-    duration: 14,
-    startDate: new Date(),
-    endDate: addDays(new Date(), 14),
-    participants: 234,
-    creator: 'FitnessGuru',
-    isActive: true,
-    imageUrl: '🔥',
-  },
-  {
-    id: '4',
-    name: 'Weight Loss Journey',
-    description: 'Lose 1 pound per week in a supportive community',
-    type: 'weight_loss',
-    goal: 1,
-    unit: 'lbs',
-    duration: 28,
-    startDate: new Date(),
-    endDate: addDays(new Date(), 28),
-    participants: 67,
-    creator: 'HealthCoach',
-    isActive: true,
-    imageUrl: '⚖️',
-  },
-]
-
-const mockUsers: User[] = [
-  { id: 'user1', name: 'Alex Johnson', email: 'alex@example.com', avatar: '👨‍💼', joinedAt: new Date() },
-  { id: 'user2', name: 'Sarah Chen', email: 'sarah@example.com', avatar: '👩‍🦳', joinedAt: new Date() },
-  { id: 'user3', name: 'Mike Rodriguez', email: 'mike@example.com', avatar: '👨‍🎓', joinedAt: new Date() },
-  { id: 'user4', name: 'Emma Davis', email: 'emma@example.com', avatar: '👩‍💻', joinedAt: new Date() },
-  { id: 'user5', name: 'David Wilson', email: 'david@example.com', avatar: '👨‍🔧', joinedAt: new Date() },
-]
 
 export const useFitnessStore = create<FitnessStore>()(
   persist(

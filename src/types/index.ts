@@ -13,6 +13,10 @@ export interface User {
   joinedAt: Date
 }
 
+export interface UserSettingsProps {
+  user: User
+}
+
 export interface Challenge {
   id: string
   name: string
@@ -28,6 +32,12 @@ export interface Challenge {
   isActive: boolean
   imageUrl?: string
 }
+export interface ChallengeCardProps {
+  challenge: Challenge
+  index: number
+  onJoin?: (challengeId: string) => void
+  onLeave?: (challengeId: string) => void
+}
 
 export type ChallengeType = 'steps' | 'distance' | 'calories' | 'weight_loss' | 'workout_time' | 'custom'
 
@@ -35,6 +45,10 @@ export interface DailyProgress {
   date: string // YYYY-MM-DD format
   value: number
   notes?: string
+}
+export interface DailyInputFormProps {
+  challengeId: string
+  onSuccess?: () => void
 }
 
 export interface UserProgress {
@@ -52,6 +66,11 @@ export interface LeaderboardEntry {
   progress: UserProgress
   rank: number
   badge?: string
+}
+
+export interface LeaderboardProps {
+  challengeId: string
+  maxEntries?: number
 }
 
 export interface Notification {
@@ -75,6 +94,20 @@ export interface AppState {
   error: string | null
 }
 
+export interface FitnessStore extends AppState {
+  setUser: (user: User) => void
+  completeOnboarding: (data: OnboardingData) => void
+  addChallenge: (challenge: Omit<Challenge, 'id' | 'participants'>) => void
+  joinChallenge: (challengeId: string) => void
+  leaveChallenge: (challengeId: string) => void
+  addProgress: (input: ProgressInput) => void
+  updateProgress: (challengeId: string, date: string, value: number, notes?: string) => void
+  generateLeaderboard: (challengeId: string) => void
+  syncProgress: () => void
+  loadMockData: () => void
+  resetStore: () => void
+}
+
 export interface OnboardingData {
   name: string
   email: string
@@ -88,4 +121,16 @@ export interface ProgressInput {
   date: string
   value: number
   notes?: string
+}
+
+export interface ProgressSummaryProps {
+  challengeId: string
+  compact?: boolean
+}
+
+export interface CircularProgressProps {
+  percentage: number
+  size?: number
+  strokeWidth?: number
+  color?: string
 }

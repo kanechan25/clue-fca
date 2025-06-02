@@ -1,18 +1,8 @@
 import { motion } from 'framer-motion'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { format } from 'date-fns'
-
-interface ProgressSummaryProps {
-  challengeId: string
-  compact?: boolean
-}
-
-interface CircularProgressProps {
-  percentage: number
-  size?: number
-  strokeWidth?: number
-  color?: string
-}
+import { ProgressSummaryProps } from '@/types'
+import { CircularProgress } from '@/components/Common/CircularProgress'
 
 export const ProgressSummary = ({ challengeId, compact = false }: ProgressSummaryProps) => {
   const { challenges, userProgress } = useFitnessStore()
@@ -28,47 +18,6 @@ export const ProgressSummary = ({ challengeId, compact = false }: ProgressSummar
   const todayProgress =
     progress.dailyEntries.find((entry) => entry.date === format(new Date(), 'yyyy-MM-dd'))?.value || 0
   const todayPercentage = Math.min((todayProgress / challenge.goal) * 100, 100)
-
-  const CircularProgress = ({ percentage, size = 80, strokeWidth = 8, color = '#3B82F6' }: CircularProgressProps) => {
-    const radius = (size - strokeWidth) / 2
-    const circumference = radius * 2 * Math.PI
-    const strokeDasharray = circumference
-    const strokeDashoffset = circumference - (percentage / 100) * circumference
-
-    return (
-      <div className='relative'>
-        <svg width={size} height={size} className='transform -rotate-90'>
-          {/* Background circle */}
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke='#E5E7EB'
-            strokeWidth={strokeWidth}
-            fill='transparent'
-          />
-          {/* Progress circle */}
-          <motion.circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke={color}
-            strokeWidth={strokeWidth}
-            fill='transparent'
-            strokeDasharray={strokeDasharray}
-            strokeDashoffset={strokeDashoffset}
-            strokeLinecap='round'
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-          />
-        </svg>
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <span className='text-sm font-semibold text-gray-700'>{Math.round(percentage)}%</span>
-        </div>
-      </div>
-    )
-  }
 
   if (compact) {
     return (

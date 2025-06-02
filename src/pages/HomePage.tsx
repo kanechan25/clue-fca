@@ -1,16 +1,16 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Filter, Plus, Trophy, Users, TrendingUp } from 'lucide-react'
+import { Search, Filter, Trophy, Users, TrendingUp } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ChallengeCard } from '@/components/ChallengeCard'
-import { Leaderboard } from '@/components/Leaderboard'
 import { UserSettings } from '@/components/UserSettings'
 import type { ChallengeType } from '@/types'
 import toast from 'react-hot-toast'
 import Dropdown from '@/components/Common/Dropdown'
 
-const filterOptions: { value: ChallengeType | 'all'; label: string; icon: string }[] = [
+const filterOptions: { value: ChallengeType | 'all' | 'actives'; label: string; icon: string }[] = [
   { value: 'all', label: 'All Challenges', icon: '🎯' },
+  { value: 'actives', label: 'All Actives', icon: '⭐' },
   { value: 'steps', label: 'Steps', icon: '🚶' },
   { value: 'distance', label: 'Running', icon: '🏃' },
   { value: 'calories', label: 'Calories', icon: '🔥' },
@@ -19,10 +19,10 @@ const filterOptions: { value: ChallengeType | 'all'; label: string; icon: string
 ]
 
 const HomePage = () => {
-  const { user, challenges, userProgress, leaderboards, loadMockData, generateLeaderboard } = useFitnessStore()
+  const { user, challenges, userProgress, loadMockData, generateLeaderboard } = useFitnessStore()
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all'>('all')
+  const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all' | 'actives'>('all')
   const [sortBy, setSortBy] = useState<'name' | 'participants' | 'recent'>('recent')
 
   // Load mock data on mount
@@ -38,7 +38,18 @@ const HomePage = () => {
       const matchesSearch =
         challenge.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         challenge.description.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesFilter = selectedFilter === 'all' || challenge.type === selectedFilter
+
+      let matchesFilter = false
+      if (selectedFilter === 'all') {
+        matchesFilter = true
+      } else if (selectedFilter === 'actives') {
+        // Show only challenges the user has joined
+        matchesFilter = !!userProgress[challenge.id]
+      } else {
+        // Show challenges of specific type
+        matchesFilter = challenge.type === selectedFilter
+      }
+
       return matchesSearch && matchesFilter && challenge.isActive
     })
 
@@ -56,7 +67,7 @@ const HomePage = () => {
     })
 
     return filtered
-  }, [challenges, searchQuery, selectedFilter, sortBy])
+  }, [challenges, searchQuery, selectedFilter, sortBy, userProgress])
 
   // Get joined challenges
   const joinedChallenges = challenges.filter((challenge) => userProgress[challenge.id])
@@ -92,7 +103,7 @@ const HomePage = () => {
             </div>
 
             {user && (
-              <div className='flex items-center space-x-3 cursor-pointer'>
+              <div className='flex items-center space-x-3'>
                 <UserSettings user={user} />
               </div>
             )}
@@ -169,7 +180,7 @@ const HomePage = () => {
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Main Content */}
-          <div className='lg:col-span-2'>
+          <div className='col-span-1 lg:col-span-3'>
             {/* Search and Filters */}
             <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
               <div className='flex flex-col md:flex-row gap-4'>
@@ -181,7 +192,7 @@ const HomePage = () => {
                     placeholder='Search challenges...'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className='w-full pl-10 pr-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                   />
                 </div>
 
@@ -190,7 +201,7 @@ const HomePage = () => {
                   <Filter className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 z-10' />
                   <select
                     value={selectedFilter}
-                    onChange={(e) => setSelectedFilter(e.target.value as ChallengeType | 'all')}
+                    onChange={(e) => setSelectedFilter(e.target.value as ChallengeType | 'all' | 'actives')}
                     className='appearance-none bg-white border border-gray-300 text-gray-700 py-2.5 pl-10 pr-10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-gray-400 transition-colors cursor-pointer'
                   >
                     {filterOptions.map((option) => (
@@ -238,40 +249,6 @@ const HomePage = () => {
                 </motion.div>
               )}
             </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className='space-y-6'>
-            {/* Leaderboard Preview */}
-            {popularChallenge && leaderboards[popularChallenge.id] && (
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-                <Leaderboard challengeId={popularChallenge.id} maxEntries={5} />
-              </motion.div>
-            )}
-
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-              className='bg-white rounded-lg shadow-md p-6'
-            >
-              <h3 className='text-lg font-semibold text-gray-800 mb-4'>Quick Actions</h3>
-              <div className='space-y-3'>
-                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
-                  <Plus className='w-5 h-5 text-blue-500' />
-                  <span className='font-medium'>Create Challenge</span>
-                </button>
-                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
-                  <Users className='w-5 h-5 text-green-500' />
-                  <span className='font-medium'>Invite Friends</span>
-                </button>
-                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
-                  <Trophy className='w-5 h-5 text-purple-500' />
-                  <span className='font-medium'>View Achievements</span>
-                </button>
-              </div>
-            </motion.div>
           </div>
         </div>
       </div>

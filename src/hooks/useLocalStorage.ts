@@ -5,7 +5,7 @@ export const useLocalStorage = <T>(
   initialValue: T,
   debounceMs: number = 500,
 ): [T, (value: T | ((val: T) => T)) => void] => {
-  // Get value from localStorage on mount
+  // Get value from localStorage
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === 'undefined') {
       return initialValue
@@ -19,15 +19,13 @@ export const useLocalStorage = <T>(
     }
   })
 
-  // Debounced setValue function
+  // Debounce setValue function
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {
       try {
-        // Allow value to be a function so we have the same API as useState
         const valueToStore = value instanceof Function ? value(storedValue) : value
         setStoredValue(valueToStore)
 
-        // Save to localStorage with debouncing
         if (typeof window !== 'undefined') {
           const timeoutId = setTimeout(() => {
             window.localStorage.setItem(key, JSON.stringify(valueToStore))
@@ -69,7 +67,6 @@ export const useOfflineSync = () => {
   const syncPendingData = useCallback(() => {
     if (isOnline && pendingSync.length > 0) {
       // Mock sync operation
-      console.log('Syncing pending data:', pendingSync)
       setPendingSync([])
       return Promise.resolve()
     }
