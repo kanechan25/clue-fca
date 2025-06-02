@@ -1,4 +1,4 @@
-import { Challenge, User } from '@/types'
+import { Challenge, Unit, User } from '@/types'
 import { addDays } from 'date-fns'
 
 export const mockChallenges: Challenge[] = [
@@ -8,7 +8,7 @@ export const mockChallenges: Challenge[] = [
     description: 'Walk 10,000 steps daily for 30 days. Join friends and track your progress!',
     type: 'steps',
     goal: 10000,
-    unit: 'steps',
+    unit: Unit.STEPS,
     duration: 30,
     startDate: new Date(),
     endDate: addDays(new Date(), 30),
@@ -23,7 +23,7 @@ export const mockChallenges: Challenge[] = [
     description: 'Run 5 miles daily building up to marathon distance',
     type: 'distance',
     goal: 5,
-    unit: 'miles',
+    unit: Unit.MILES,
     duration: 21,
     startDate: new Date(),
     endDate: addDays(new Date(), 21),
@@ -38,7 +38,7 @@ export const mockChallenges: Challenge[] = [
     description: 'Burn 500 calories daily through any activity',
     type: 'calories',
     goal: 500,
-    unit: 'calories',
+    unit: Unit.CALORIES,
     duration: 14,
     startDate: new Date(),
     endDate: addDays(new Date(), 14),
@@ -53,7 +53,7 @@ export const mockChallenges: Challenge[] = [
     description: 'Lose 1 pound per week in a supportive community',
     type: 'weight_loss',
     goal: 1,
-    unit: 'lbs',
+    unit: Unit.POUNDS,
     duration: 28,
     startDate: new Date(),
     endDate: addDays(new Date(), 28),
@@ -70,4 +70,9 @@ export const mockUsers: User[] = [
   { id: 'user3', name: 'Mike Rodriguez', email: 'mike@example.com', avatar: '👨‍🎓', joinedAt: new Date() },
   { id: 'user4', name: 'Emma Davis', email: 'emma@example.com', avatar: '👩‍💻', joinedAt: new Date() },
   { id: 'user5', name: 'David Wilson', email: 'david@example.com', avatar: '👨‍🔧', joinedAt: new Date() },
+  { id: 'user6', name: 'John Doe', email: 'john@example.com', avatar: '👨‍💼', joinedAt: new Date() },
+  { id: 'user7', name: 'Jane Smith', email: 'jane@example.com', avatar: '👩‍💼', joinedAt: new Date() },
+  { id: 'user8', name: 'Michael Brown', email: 'michael@example.com', avatar: '👨‍💼', joinedAt: new Date() },
+  { id: 'user9', name: 'Emily Johnson', email: 'emily@example.com', avatar: '👩‍💼', joinedAt: new Date() },
+  { id: 'user10', name: 'Robert Lee', email: 'robert@example.com', avatar: '👨‍💼', joinedAt: new Date() },
 ]

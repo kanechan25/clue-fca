@@ -4,7 +4,7 @@ import { Plus, Save, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import toast from 'react-hot-toast'
-import { DailyInputFormProps } from '@/types'
+import { DailyInputFormProps, Unit } from '@/types'
 
 export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) => {
   const { challenges, userProgress, addProgress } = useFitnessStore()
@@ -143,19 +143,19 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
               <Calendar className='w-4 h-4 text-gray-600' />
             </button>
           </div>
-          <p className='text-xs text-gray-500 mt-1'>Click the date field or calendar icon to open date picker</p>
+          <p className='text-xs text-gray-500 mt-1'>Click the calendar icon to open date picker</p>
         </div>
 
         {/* Value Input */}
         <div>
           <label className='block text-sm font-medium text-gray-700 mb-2'>
-            {challenge.unit === 'steps'
+            {challenge.unit === Unit.STEPS
               ? 'Steps'
-              : challenge.unit === 'miles'
+              : challenge.unit === Unit.MILES
                 ? 'Distance (miles)'
-                : challenge.unit === 'calories'
+                : challenge.unit === Unit.CALORIES
                   ? 'Calories'
-                  : challenge.unit === 'lbs'
+                  : challenge.unit === Unit.POUNDS
                     ? 'Weight Lost (lbs)'
                     : `Value (${challenge.unit})`}
           </label>
@@ -165,7 +165,7 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
             onChange={(e) => setValue(e.target.value)}
             placeholder={`Enter ${challenge.unit}`}
             min='0'
-            step={challenge.unit === 'lbs' ? '0.1' : '1'}
+            step={challenge.unit === Unit.STEPS ? '1' : '0.1'}
             className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
             required
           />

@@ -17,13 +17,20 @@ export interface UserSettingsProps {
   user: User
 }
 
+export enum Unit {
+  STEPS = 'steps',
+  MILES = 'miles',
+  CALORIES = 'calories',
+  POUNDS = 'lbs',
+  MINUTES = 'minutes',
+}
 export interface Challenge {
   id: string
   name: string
   description: string
   type: ChallengeType
   goal: number
-  unit: string
+  unit: Unit
   duration: number // days
   startDate: Date
   endDate: Date
