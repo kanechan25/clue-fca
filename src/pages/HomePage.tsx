@@ -255,15 +255,15 @@ const HomePage = () => {
             >
               <h3 className='text-lg font-semibold text-gray-800 mb-4'>Quick Actions</h3>
               <div className='space-y-3'>
-                <button className='w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors'>
+                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
                   <Plus className='w-5 h-5 text-blue-500' />
                   <span className='font-medium'>Create Challenge</span>
                 </button>
-                <button className='w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors'>
+                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
                   <Users className='w-5 h-5 text-green-500' />
                   <span className='font-medium'>Invite Friends</span>
                 </button>
-                <button className='w-full flex items-center space-x-3 p-3 text-left rounded-lg hover:bg-gray-50 transition-colors'>
+                <button className='w-full flex items-center space-x-3 p-3 text-black cursor-pointer text-left rounded-lg hover:bg-gray-50 transition-colors'>
                   <Trophy className='w-5 h-5 text-purple-500' />
                   <span className='font-medium'>View Achievements</span>
                 </button>

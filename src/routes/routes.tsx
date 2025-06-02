@@ -1,4 +1,4 @@
-import { Routes } from '@/models/types'
+import { Routes } from '@/types'
 import HomePage from '@/pages/HomePage'
 import ChallengeDetailPage from '@/pages/ChallengeDetailPage'
 

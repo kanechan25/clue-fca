@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { format, addDays, isAfter, isBefore, startOfDay } from 'date-fns'
+import { addDays } from 'date-fns'
 import type {
   AppState,
   Challenge,
@@ -10,7 +10,6 @@ import type {
   ProgressInput,
   LeaderboardEntry,
   OnboardingData,
-  ChallengeType,
 } from '@/types'
 
 interface FitnessStore extends AppState {

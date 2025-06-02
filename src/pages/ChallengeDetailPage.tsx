@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Calendar, Target, Users, TrendingUp, Award, Share2, MoreVertical } from 'lucide-react'
+import { ArrowLeft, Calendar, Target, TrendingUp, Award, Share2, MoreVertical } from 'lucide-react'
 import { format, differenceInDays, eachDayOfInterval, startOfDay } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ProgressSummary } from '@/components/ProgressSummary'

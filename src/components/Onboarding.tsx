@@ -52,6 +52,16 @@ export const Onboarding = () => {
     }))
   }
 
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value
+    setFormData((prev) => ({ ...prev, name: newName }))
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value
+    setFormData((prev) => ({ ...prev, email: newEmail }))
+  }
+
   const handleComplete = () => {
     if (!formData.name.trim() || !formData.email.trim()) {
       toast.error('Please fill in all required fields')
@@ -116,26 +126,36 @@ export const Onboarding = () => {
 
             <div className='space-y-4'>
               <div>
-                <label className='block text-sm font-medium text-gray-700 mb-2'>Full Name *</label>
+                <label htmlFor='name-input' className='block text-sm font-medium text-gray-700 mb-2'>
+                  Full Name *
+                </label>
                 <input
+                  id='name-input'
                   type='text'
                   value={formData.name}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                  onChange={handleNameChange}
+                  onInput={handleNameChange}
                   placeholder='Enter your full name'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                  className='w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
                   required
+                  autoComplete='given-name'
                 />
               </div>
 
               <div>
-                <label className='block text-sm font-medium text-gray-700 mb-2'>Email Address *</label>
+                <label htmlFor='email-input' className='block text-sm font-medium text-gray-700 mb-2'>
+                  Email Address *
+                </label>
                 <input
+                  id='email-input'
                   type='email'
                   value={formData.email}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                  onChange={handleEmailChange}
+                  onInput={handleEmailChange}
                   placeholder='Enter your email address'
-                  className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                  className='w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
                   required
+                  autoComplete='email'
                 />
               </div>
             </div>
@@ -158,7 +178,7 @@ export const Onboarding = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleGoalToggle(challengeType.type)}
-                  className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                  className={`p-4 cursor-pointer rounded-lg border-2 transition-all duration-200 text-left ${
                     formData.fitnessGoals.includes(challengeType.type)
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 bg-white hover:border-gray-300'
@@ -195,7 +215,7 @@ export const Onboarding = () => {
                 <div className='grid grid-cols-2 gap-3'>
                   <button
                     onClick={() => setFormData((prev) => ({ ...prev, preferredUnits: 'metric' }))}
-                    className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                    className={`p-3 text-black cursor-pointer rounded-lg border-2 transition-all duration-200 ${
                       formData.preferredUnits === 'metric'
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
@@ -208,7 +228,7 @@ export const Onboarding = () => {
                   </button>
                   <button
                     onClick={() => setFormData((prev) => ({ ...prev, preferredUnits: 'imperial' }))}
-                    className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                    className={`p-3 text-black cursor-pointer rounded-lg border-2 transition-all duration-200 ${
                       formData.preferredUnits === 'imperial'
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 bg-white hover:border-gray-300'
@@ -229,7 +249,7 @@ export const Onboarding = () => {
                 </div>
                 <button
                   onClick={() => setFormData((prev) => ({ ...prev, notificationsEnabled: !prev.notificationsEnabled }))}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
                     formData.notificationsEnabled ? 'bg-blue-600' : 'bg-gray-300'
                   }`}
                 >
@@ -292,7 +312,7 @@ export const Onboarding = () => {
             whileTap={{ scale: 0.98 }}
             onClick={handlePrev}
             disabled={currentStep === 1}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+            className={`flex cursor-pointer items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
               currentStep === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -305,7 +325,7 @@ export const Onboarding = () => {
             whileTap={{ scale: 0.98 }}
             onClick={currentStep === steps.length ? handleComplete : handleNext}
             disabled={!canProceed()}
-            className={`flex items-center space-x-2 px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
+            className={`flex cursor-pointer items-center space-x-2 px-6 py-2 rounded-lg font-semibold transition-all duration-200 ${
               canProceed()
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
