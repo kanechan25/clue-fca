@@ -118,9 +118,7 @@ export const useFitnessStore = create<FitnessStore>()(
         set((state) => {
           const currentProgress = state.userProgress[challengeId]
           if (!currentProgress) return state
-
           const existingEntryIndex = currentProgress.dailyEntries.findIndex((entry) => entry.date === date)
-
           let updatedEntries: DailyProgress[]
           if (existingEntryIndex >= 0) {
             updatedEntries = currentProgress.dailyEntries.map((entry, index) =>

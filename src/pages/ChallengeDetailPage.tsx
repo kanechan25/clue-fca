@@ -10,16 +10,16 @@ import { DailyInputForm } from '@/components/DailyInputForm'
 import toast from 'react-hot-toast'
 import { Sharing } from '@/components/Common/Sharing'
 import { Tab, tabs } from '@/constants'
+import ChallengeNotFound from './ChallengeNotFound'
 
 export const ChallengeDetailPage = () => {
   const { challengeId } = useParams<{ challengeId: string }>()
-  const navigate = useNavigate()
   const { challenges, userProgress, leaderboards, generateLeaderboard, joinChallenge, leaveChallenge } =
     useFitnessStore()
-
+  const challenge = challenges.find((c) => c.id === challengeId)
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Progress)
 
-  const challenge = challenges.find((c) => c.id === challengeId)
   const progress = challengeId ? userProgress[challengeId] : null
   const leaderboard = challengeId ? leaderboards[challengeId] || [] : []
   const isJoined = !!progress
@@ -31,17 +31,7 @@ export const ChallengeDetailPage = () => {
   }, [challenge, challengeId, leaderboard.length, generateLeaderboard])
 
   if (!challenge || !challengeId) {
-    return (
-      <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
-        <div className='text-center'>
-          <div className='text-4xl mb-4'>😕</div>
-          <h2 className='text-xl font-semibold text-gray-600 mb-2'>Challenge Not Found</h2>
-          <button onClick={() => navigate('/')} className='text-blue-500 hover:text-blue-600'>
-            Back to Home
-          </button>
-        </div>
-      </div>
-    )
+    return <ChallengeNotFound />
   }
 
   const daysLeft = differenceInDays(new Date(challenge.endDate), new Date())

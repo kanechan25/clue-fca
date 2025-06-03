@@ -16,5 +16,5 @@ export const routers: Routes[] = [
     element: <ChallengeDetailPage />,
   },
 
-  // Add other routes as needed
+  // Add other routes if needed
 ]

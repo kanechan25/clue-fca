@@ -164,7 +164,6 @@ const HomePage = () => {
         </div>
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Main Content */}
           <div className='col-span-1 lg:col-span-3'>
             {/* Search and Filters */}
             <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
@@ -241,7 +240,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Create Challenge Modal */}
       <CreateChallengeModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
