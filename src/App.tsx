@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AppProviders } from '@/providers/AppProviders'
 import { useAuth } from '@/providers/AuthProvider'
-import { Onboarding } from '@/components/Onboarding'
+import { Onboarding } from '@/pages/Onboarding'
 import { routers } from '@/routes/routes'
 import './assets/css/App.css'
 
