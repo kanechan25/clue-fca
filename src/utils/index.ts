@@ -1,5 +1,4 @@
 import { ChallengeType, Unit } from '@/types/challenge'
-import { Trophy, Medal, Award } from 'lucide-react'
 
 export const getTypeIcon = (type: ChallengeType) => {
   switch (type) {
