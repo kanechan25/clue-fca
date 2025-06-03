@@ -8,22 +8,36 @@ import { getTypeColor } from '@/utils'
 import { ChallengeCardProps } from '@/types'
 import { ProgressSummary } from '@/components/ProgressSummary'
 import { Sharing } from './Common/Sharing'
+import { memo, useMemo, useCallback } from 'react'
+import toast from 'react-hot-toast'
 
-export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCardProps) => {
+export const ChallengeCard = memo(({ challenge, index }: ChallengeCardProps) => {
   const navigate = useNavigate()
   const { userProgress, joinChallenge, leaveChallenge } = useFitnessStore()
-  const isJoined = !!userProgress[challenge.id]
-  const daysLeft = differenceInDays(new Date(challenge.endDate), new Date())
 
-  const handleToggleJoin = () => {
+  const isJoined = useMemo(() => !!userProgress[challenge.id], [userProgress, challenge.id])
+  const daysLeft = useMemo(() => differenceInDays(new Date(challenge.endDate), new Date()), [challenge.endDate])
+  const participantCount = useMemo(
+    () => (Array.isArray(challenge?.participants) ? challenge.participants.length : 0),
+    [challenge.participants],
+  )
+  const formattedStartDate = useMemo(() => format(new Date(challenge.startDate), 'MMM dd'), [challenge.startDate])
+  const typeColor = useMemo(() => getTypeColor(challenge.type), [challenge.type])
+  const typeIcon = useMemo(() => getTypeIcon(challenge.type), [challenge.type])
+
+  const handleToggleJoin = useCallback(() => {
     if (isJoined) {
       leaveChallenge(challenge.id)
-      onLeave?.(challenge.id)
+      toast.success(`Left "${challenge.name}"`)
     } else {
       joinChallenge(challenge.id)
-      onJoin?.(challenge.id)
+      toast.success(`Joined "${challenge.name}"! 🎉`)
     }
-  }
+  }, [isJoined, challenge.id, challenge.name, leaveChallenge, joinChallenge])
+
+  const handleNavigate = useCallback(() => {
+    navigate(`/challenge/${challenge.id}`)
+  }, [navigate, challenge.id])
 
   return (
     <motion.div
@@ -32,15 +46,10 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className='bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 mb-16'
     >
-      <div
-        onClick={() => {
-          navigate(`/challenge/${challenge.id}`)
-        }}
-        className={`bg-gradient-to-r ${getTypeColor(challenge.type)} p-6 text-white cursor-pointer`}
-      >
+      <div onClick={handleNavigate} className={`bg-gradient-to-r ${typeColor} p-6 text-white cursor-pointer`}>
         <div className='flex items-start justify-between'>
           <div className='flex items-center space-x-3'>
-            <span className='text-3xl'>{getTypeIcon(challenge.type)}</span>
+            <span className='text-3xl'>{typeIcon}</span>
             <div>
               <h3 className='text-xl font-bold'>{challenge.name}</h3>
               <p className='text-white/80 text-sm'>by {challenge.creator}</p>
@@ -75,11 +84,11 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
           </div>
           <div className='flex items-center space-x-2 text-sm text-gray-500'>
             <Users className='w-4 h-4' />
-            <span>{Array.isArray(challenge?.participants) ? challenge.participants.length : 0} participants</span>
+            <span>{participantCount} participants</span>
           </div>
           <div className='flex items-center space-x-2 text-sm text-gray-500'>
             <Calendar className='w-4 h-4' />
-            <span>Started {format(new Date(challenge.startDate), 'MMM dd')}</span>
+            <span>Started {formattedStartDate}</span>
           </div>
         </div>
 
@@ -98,7 +107,7 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
           className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors duration-200 ${
             isJoined
               ? 'bg-red-100 text-red-700 hover:bg-red-200'
-              : `bg-gradient-to-r ${getTypeColor(challenge.type)} text-white hover:opacity-90`
+              : `bg-gradient-to-r ${typeColor} text-white hover:opacity-90`
           }`}
         >
           {isJoined ? 'Leave Challenge' : 'Join Challenge'}
@@ -106,4 +115,6 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
       </div>
     </motion.div>
   )
-}
+})
+
+ChallengeCard.displayName = 'ChallengeCard'

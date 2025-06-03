@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LogOut, RotateCcw, ChevronDown, Settings } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
@@ -6,7 +6,7 @@ import { useClickOutside } from '@/hooks/useClickOutside'
 import type { UserSettingsProps } from '@/types'
 import toast from 'react-hot-toast'
 
-export const UserSettings = ({ user }: UserSettingsProps) => {
+export const UserSettings = memo(({ user }: UserSettingsProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [showConfirmReset, setShowConfirmReset] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -126,4 +126,6 @@ export const UserSettings = ({ user }: UserSettingsProps) => {
       </AnimatePresence>
     </div>
   )
-}
+})
+
+UserSettings.displayName = 'UserSettings'

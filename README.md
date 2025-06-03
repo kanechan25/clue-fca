@@ -1,59 +1,74 @@
-# 🏆 Fitness Challenge App
+# 🏆 Fitness Challenge App (FCA)
 
-A modern React web application for fitness challenge tracking, progress monitoring, and social engagement with friends.
+A modern React web application for fitness challenge tracking, progress monitoring, and social engagement. Built with React 19, TypeScript, and modern web technologies for an engaging fitness community experience.
 
 ## ✨ Features
 
 ### 🎯 Core Functionality
 
-- **Onboarding Flow**: Welcome walkthrough with personal fitness goal selection
-- **Challenge Management**: Browse, join, and leave fitness challenges
-- **Progress Tracking**: Daily input and visualization of fitness progress
-- **Social Features**: Leaderboards and friend competition
-- **Calendar View**: Visual progress calendar with color-coded achievements
+- **Smart Onboarding**: 4-step personalized onboarding flow with fitness goal selection
+- **Challenge Management**: Create, browse, join, and leave fitness challenges with real-time updates
+- **Progress Tracking**: Daily progress input with visual feedback and note-taking capabilities
+- **Social Leaderboards**: Competitive rankings with real-time updates and achievement badges
+- **Calendar Visualization**: Color-coded progress calendar with daily achievement tracking
+- **User Settings**: Comprehensive profile management with notification preferences
 
 ### 🎨 UI/UX Features
 
-- **Smooth Animations**: Framer Motion powered transitions and interactions
-- **Responsive Design**: Mobile-first design with TailwindCSS
-- **Real-time Updates**: Instant feedback with toast notifications
-- **Offline Support**: LocalStorage persistence with sync capabilities
-- **Accessibility**: Keyboard navigation and screen reader support
-
-### 📊 Challenge Types
-
-- 🚶 **Daily Steps**: Track walking goals
-- 🏃 **Running/Distance**: Monitor distance covered
-- 🔥 **Calorie Burn**: Track calories burned
-- ⚖️ **Weight Management**: Monitor weight loss progress
-- 💪 **Workout Time**: Track exercise duration
+- **Smooth Animations**: Framer Motion powered page transitions and component interactions
+- **Responsive Design**: Mobile-first design with TailwindCSS 4.0
+- **Real-time Feedback**: Instant toast notifications and loading states
+- **Persistent Storage**: LocalStorage integration with Zustand for offline support
+- **Modern Accessibility**: Keyboard navigation, screen reader support, and semantic HTML
+- **Custom Components**: Reusable UI components with consistent design system
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript
-- **State Management**: Zustand with persistence
-- **Styling**: TailwindCSS 4.0
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
-- **Notifications**: React Hot Toast
-- **Routing**: React Router DOM
-- **Build Tool**: Vite
-- **Testing**: Vitest + React Testing Library
+### Frontend Core
+
+- **React**: v19.0.0 with modern functional components and hooks
+- **TypeScript**: v5.7.2 with strict mode for type safety
+- **Vite**: v6.2.0 for fast development and optimized builds
+- **React Router DOM**: v7.3.0 for client-side routing
+
+### State & Data Management
+
+- **Zustand**: v5.0.3 for lightweight state management with persistence
+- **TanStack React Query**: v5.67.3 for server state management and caching
+- **Axios**: v1.8.3 for HTTP client operations
+
+### Styling & UI
+
+- **TailwindCSS**: v4.0.13 with custom utilities and responsive design
+- **Framer Motion**: v12.15.0 for smooth animations and transitions
+- **Lucide React**: v0.511.0 for consistent iconography
+
+### Utilities & Tools
+
+- **date-fns**: v4.1.0 for date manipulation and formatting
+- **React Hot Toast**: v2.5.2 for notification system
+
+### Development & Testing
+
+- **Vitest**: v3.0.8 with React Testing Library for unit testing
+- **ESLint**: v9.21.0 with TypeScript and React configuration
+- **Prettier**: v3.5.3 for code formatting
+- **Husky**: v9.1.7 for Git hooks
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
+- **Node.js**: 18+ (recommended: 20+)
+- **Package Manager**: pnpm (recommended) or npm
+- **Git**: For version control
 
 ### Installation
 
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/kanechan25/clue-fca.git
    cd clue-fca
    ```
 
@@ -66,217 +81,107 @@ A modern React web application for fitness challenge tracking, progress monitori
    ```
 
 3. **Start development server**
-
    ```bash
    pnpm dev
    # or
    npm run dev
    ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:5179`
+   The app will be available at `http://localhost:5179`
 
 ### Build for Production
 
 ```bash
-pnpm build
+pnpm build && pnpm preview
 # or
-npm run build
+npm run build && npm run preview
 ```
 
-### Run Tests
+## 📱 User Journey
 
-```bash
-pnpm test
-# or
-npm test
-```
+### First-Time Setup
 
-## 📱 Usage Guide
+1. **Welcome Screen**: Introduction to the fitness challenge platform
+2. **Profile Setup**: Enter name, email, and personal preferences
+3. **Fitness Goals**: Select preferred challenge types and activity levels
+4. **Preferences**: Configure units (metric/imperial) and notification settings
 
-### First Time Setup
+### Daily Workflow
 
-1. **Onboarding**: Complete the 4-step onboarding process
+1. **Dashboard**: View active challenges and quick progress stats
+2. **Challenge Discovery**: Browse and filter available challenges
+3. **Join Challenges**: One-click join with immediate leaderboard inclusion
+4. **Daily Tracking**: Input progress with optional notes and photos
+5. **Social Engagement**: View rankings, achievements, and share with friends
 
-   - Welcome screen
-   - Profile setup (name, email)
-   - Fitness goals selection
-   - Preferences configuration
+### Challenge Management
 
-2. **Explore Challenges**: Browse available fitness challenges on the home page
+- **Create Challenges**: Set goals, duration, and invite participants
+- **Progress Tracking**: Visual charts and calendar views
+- **Leaderboard Competition**: Real-time rankings with achievement badges
+- **Challenge Sharing**: Share achievements and invite friends
 
-3. **Join a Challenge**: Click "Join Challenge" on any challenge card
-
-4. **Track Progress**: Use the daily input form to log your progress
-
-5. **View Progress**: Check your progress in multiple views:
-   - Progress summary with circular charts
-   - Calendar view with color-coded days
-   - Leaderboard rankings
-
-### Key Features
-
-#### 🏠 Home Page
-
-- Search and filter challenges
-- View joined challenges with progress previews
-- Quick stats dashboard
-- Leaderboard preview
-
-#### 📊 Challenge Detail Page
-
-- **Progress Tab**: Track daily progress with input forms
-- **Leaderboard Tab**: See rankings and compete with others
-- **Calendar Tab**: Visual progress calendar
-
-#### 🎯 Progress Tracking
-
-- Daily value input with validation
-- Optional notes for each entry
-- Real-time progress calculations
-- Visual feedback with animations
-
-## 🏗️ Project Structure
+## 🏗️ Project Architecture
 
 ```
 src/
-├── components/          # Reusable UI components
-│   ├── ChallengeCard.tsx
-│   ├── ProgressSummary.tsx
-│   ├── Leaderboard.tsx
-│   ├── DailyInputForm.tsx
-│   └── Onboarding.tsx
-├── pages/              # Page components
-│   ├── HomePage.tsx
-│   └── ChallengeDetailPage.tsx
-├── stores/             # Zustand stores
-│   └── fitnessStore.ts
-├── hooks/              # Custom React hooks
-│   └── useLocalStorage.ts
-├── types/              # TypeScript type definitions
-│   └── index.ts
-├── routes/             # Routing configuration
-│   └── routes.tsx
-└── assets/             # Static assets and styles
-    └── css/
+├── components/              # Reusable UI components
+│   ├── Common/             # Shared utility components
+│   │   ├── Button.tsx
+│   │   ├── CircularProgress.tsx
+│   │   ├── DatePicker.tsx
+│   │   ├── Dropdown.tsx
+│   │   └── Sharing.tsx
+│   ├── ChallengeCard.tsx   # Challenge display component
+│   ├── CreateChallengeModal.tsx # Challenge creation modal
+│   ├── DailyInputForm.tsx  # Progress input form
+│   ├── Leaderboard.tsx     # Ranking display
+│   ├── Onboarding.tsx      # Multi-step onboarding flow
+│   ├── ProgressSummary.tsx # Progress visualization
+│   └── UserSettings.tsx    # User profile management
+├── pages/                  # Route-level page components
+│   ├── HomePage.tsx        # Main dashboard and challenge browser
+│   └── ChallengeDetailPage.tsx # Individual challenge view
+├── stores/                 # State management
+│   └── fitnessStore.ts     # Zustand store with persistence
+├── hooks/                  # Custom React hooks
+│   └── useClickOutside.ts  # Outside click detection
+├── types/                  # TypeScript definitions
+│   └── index.ts           # All type definitions
+├── utils/                 # Utility functions
+│   ├── index.ts           # General utilities
+│   └── format.ts          # Formatting helpers
+├── constants/             # Application constants
+│   ├── index.ts           # General constants
+│   └── mock.ts            # Mock data for development
+├── routes/                # Routing configuration
+│   └── routes.tsx         # Route definitions
+├── provider/              # Context providers
+│   └── queryProvider.tsx  # React Query provider
+├── assets/                # Static assets
+│   └── css/               # Global styles
+└── __test__/              # Test utilities and setup
+    ├── setup.ts           # Test configuration
+    ├── utils.tsx          # Test utilities
+    └── units/             # Unit test files
 ```
 
-### TailwindCSS
+## 🧪 Testing Strategy
 
-The app uses TailwindCSS 4.0 with custom utilities for animations and responsive design.
+### Test Setup
 
-## 📊 Data Management
+- **Vitest**: Fast unit testing with hot reload
+- **React Testing Library**: Component testing with user-centric approach
+- **Jest DOM**: Extended matchers for DOM testing
+- **Coverage**: Comprehensive test coverage reporting
 
-### State Management
-
-- **Zustand**: Lightweight state management with persistence
-- **LocalStorage**: Automatic persistence of user data and progress
-- **Mock Data**: Pre-populated challenges and leaderboards for development
-
-### Data Structure
-
-```typescript
-interface Challenge {
-  id: string
-  name: string
-  description: string
-  type: ChallengeType
-  goal: number
-  unit: string
-  duration: number
-  startDate: Date
-  endDate: Date
-  participants: number
-  creator: string
-  isActive: boolean
-}
-
-interface UserProgress {
-  challengeId: string
-  userId: string
-  dailyEntries: DailyProgress[]
-  totalProgress: number
-  rank?: number
-  joined: Date
-  completed: boolean
-}
-```
-
-## 🎨 Design System
-
-### Colors
-
-- **Primary**: Blue gradient (#3B82F6 to #2563EB)
-- **Success**: Green (#10B981)
-- **Warning**: Yellow (#F59E0B)
-- **Error**: Red (#EF4444)
-- **Gray Scale**: Tailwind gray palette
-
-### Typography
-
-- **Font Family**: System fonts (-apple-system, BlinkMacSystemFont, etc.)
-- **Font Weights**: 400 (normal), 500 (medium), 600 (semibold), 700 (bold)
-
-### Animations
-
-- **Page Transitions**: Fade and slide effects
-- **Component Animations**: Scale, bounce, and pulse effects
-- **Progress Animations**: Smooth progress bar fills and circular progress
-
-## 🧪 Testing
-
-The app includes comprehensive testing setup:
+### Running Tests
 
 ```bash
-# Run all tests
-pnpm test
+# Development testing
+pnpm test              # Interactive watch mode
+pnpm test:ui          # Visual test runner interface
+pnpm test:coverage    # Generate coverage reports
 
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage
-pnpm test:coverage
-
-# Run tests with UI
-pnpm test:ui
+# CI/CD testing
+pnpm test run         # Single run for CI environments
 ```
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Connect your GitHub repository to Vercel
-2. Configure build settings:
-   - Build Command: `pnpm build`
-   - Output Directory: `dist`
-3. Deploy automatically on push to main branch
-
-### Netlify
-
-1. Connect repository to Netlify
-2. Set build command: `pnpm build`
-3. Set publish directory: `dist`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Framer Motion** for smooth animations
-- **TailwindCSS** for utility-first styling
-- **Zustand** for simple state management
-- **Lucide React** for beautiful icons
-- **React Hot Toast** for notifications
-
----
-
-Built with ❤️ using React and TypeScript

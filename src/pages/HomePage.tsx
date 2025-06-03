@@ -1,18 +1,18 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 import { Search, Filter, Trophy, Users, TrendingUp, Plus } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ChallengeCard } from '@/components/ChallengeCard'
 import { UserSettings } from '@/components/UserSettings'
 import { CreateChallengeModal } from '@/components/CreateChallengeModal'
-import toast from 'react-hot-toast'
 import Dropdown from '@/components/Common/Dropdown'
 import { formatProgressWithUnit } from '@/utils/format'
 import { Challenge, ChallengeType } from '@/types'
 import { filterOptions } from '@/constants/mock'
 
 const HomePage = () => {
-  const { user, challenges, userProgress, loadMockData, generateLeaderboard, addChallenge } = useFitnessStore()
+  const { user, challenges, userProgress, loadMockData, addChallenge } = useFitnessStore()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all' | 'actives'>('all')
@@ -58,22 +58,19 @@ const HomePage = () => {
     return filtered
   }, [challenges, searchQuery, selectedFilter, sortBy, userProgress])
 
-  // Get joined challenges
-  const joinedChallenges = challenges.filter((challenge) => userProgress[challenge.id])
+  const joinedChallenges = () => challenges.filter((challenge) => userProgress[challenge.id])
+  const formattedProgress = formatProgressWithUnit(userProgress, challenges)
 
-  const handleJoinChallenge = (challengeId: string) => {
-    const challenge = challenges.find((c) => c.id === challengeId)
-    if (challenge) {
-      toast.success(`Joined "${challenge.name}"! 🎉`)
-      generateLeaderboard(challengeId)
-    }
-  }
+  const totalParticipants = () =>
+    challenges.reduce(
+      (sum, challenge) => sum + (Array.isArray(challenge?.participants) ? challenge.participants.length : 0),
+      0,
+    )
 
-  const handleLeaveChallenge = (challengeId: string) => {
-    const challenge = challenges.find((c) => c.id === challengeId)
-    if (challenge) {
-      toast.success(`Left "${challenge.name}"`)
-    }
+  const handleCreateChallenge = (challengeData: Challenge) => {
+    addChallenge(challengeData)
+    setIsCreateModalOpen(false)
+    toast.success('Challenge created successfully! 🎉')
   }
 
   return (
@@ -135,12 +132,12 @@ const HomePage = () => {
               <div className='ml-4 flex-1'>
                 <p className='text-sm font-medium text-gray-600'>Total Progress</p>
                 <div className='mt-1'>
-                  {formatProgressWithUnit(userProgress, challenges).map((formattedProgress, index) => (
+                  {formattedProgress.map((progressItem, index) => (
                     <div key={index} className='text-md font-sm text-gray-900'>
-                      {formattedProgress}
+                      {progressItem}
                     </div>
                   ))}
-                  {formatProgressWithUnit(userProgress, challenges).length === 0 && (
+                  {formattedProgress.length === 0 && (
                     <p className='text-md font-sm text-gray-900'>No active challenges</p>
                   )}
                 </div>
@@ -160,15 +157,7 @@ const HomePage = () => {
               </div>
               <div className='ml-4'>
                 <p className='text-sm font-medium text-gray-600'>Total Participants</p>
-                <p className='text-2xl font-bold text-gray-900'>
-                  {challenges
-                    .reduce(
-                      (sum, challenge) =>
-                        sum + (Array.isArray(challenge?.participants) ? challenge.participants.length : 0),
-                      0,
-                    )
-                    .toLocaleString()}
-                </p>
+                <p className='text-2xl font-bold text-gray-900'>{totalParticipants.toLocaleString()}</p>
               </div>
             </div>
           </motion.div>
@@ -238,13 +227,7 @@ const HomePage = () => {
             <div className='space-y-6'>
               {filteredChallenges?.length > 0 ? (
                 filteredChallenges?.map((challenge, index) => (
-                  <ChallengeCard
-                    key={challenge.id}
-                    challenge={challenge}
-                    index={index}
-                    onJoin={handleJoinChallenge}
-                    onLeave={handleLeaveChallenge}
-                  />
+                  <ChallengeCard key={challenge.id} challenge={challenge} index={index} />
                 ))
               ) : (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className='text-center py-12'>
@@ -262,11 +245,7 @@ const HomePage = () => {
       <CreateChallengeModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCreateChallenge={(challengeData: Challenge) => {
-          addChallenge(challengeData)
-          setIsCreateModalOpen(false)
-          toast.success('Challenge created successfully! 🎉')
-        }}
+        onCreateChallenge={handleCreateChallenge}
         currentUser={user}
       />
     </div>
