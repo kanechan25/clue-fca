@@ -51,10 +51,10 @@ export const ChallengeDetailPage = () => {
   const handleJoinLeave = () => {
     if (isJoined) {
       leaveChallenge(challengeId)
-      toast.success(`Left "${challenge.name}"`)
+      toast.success(`Left ${challenge.name}`)
     } else {
       joinChallenge(challengeId)
-      toast.success(`Joined "${challenge.name}"! 🎉`)
+      toast.success(`Joined ${challenge.name}! 🎉`)
       generateLeaderboard(challengeId)
     }
   }

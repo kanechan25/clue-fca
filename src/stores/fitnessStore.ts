@@ -46,7 +46,7 @@ export const useFitnessStore = create<FitnessStore>()(
         }
         set({ user, isOnboarded: true })
       },
-      // TODO
+
       addChallenge: (challengeData) => {
         const challenge: Challenge = {
           ...challengeData,

@@ -17,7 +17,7 @@ export const getTypeIcon = (type: ChallengeType) => {
   }
 }
 
-export const getTypeColor = (type: string) => {
+export const getTypeColor = (type: ChallengeType) => {
   switch (type) {
     case ChallengeType.STEPS:
       return 'from-blue-500 to-blue-600'
