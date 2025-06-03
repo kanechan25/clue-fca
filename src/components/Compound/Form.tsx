@@ -1,17 +1,8 @@
-import React, { createContext, useContext, ReactNode } from 'react'
+import React, { createContext, useContext } from 'react'
+import { FormContextType, FormProps, FormFieldProps, FormLabelProps, FormInputProps } from '@/types/components'
 
-// Form context interface - only what's actually used
-interface FormContextType {
-  values: Record<string, any>
-  errors: Record<string, string>
-  touched: Record<string, boolean>
-  setValue: (name: string, value: any) => void
-}
-
-// Create form context
 const FormContext = createContext<FormContextType | undefined>(undefined)
 
-// Hook to use form context
 function useFormContext() {
   const context = useContext(FormContext)
   if (context === undefined) {
@@ -20,27 +11,15 @@ function useFormContext() {
   return context
 }
 
-// Main Form component (root)
-interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
-  children: ReactNode
-  values: Record<string, any>
-  errors?: Record<string, string>
-  touched?: Record<string, boolean>
-  onValuesChange?: (values: Record<string, any>) => void
-  onSubmit?: (values: Record<string, any>) => void
-}
-
 function FormRoot({ children, values, errors = {}, touched = {}, onValuesChange, onSubmit, ...props }: FormProps) {
   const setValue = (name: string, value: any) => {
     const newValues = { ...values, [name]: value }
     onValuesChange?.(newValues)
   }
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit?.(values)
   }
-
   return (
     <FormContext.Provider value={{ values, errors, touched, setValue }}>
       <form onSubmit={handleSubmit} {...props}>
@@ -50,29 +29,15 @@ function FormRoot({ children, values, errors = {}, touched = {}, onValuesChange,
   )
 }
 
-// Form field component
-interface FormFieldProps {
-  children: ReactNode
-  name: string
-  className?: string
-}
-
 function FormField({ children, name, className }: FormFieldProps) {
   const { errors, touched } = useFormContext()
   const hasError = touched[name] && errors[name]
-
   return (
     <div className={`space-y-1 ${className || ''}`}>
       {children}
       {hasError && <p className='text-sm text-red-600'>{errors[name]}</p>}
     </div>
   )
-}
-
-// Form label component
-interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
-  children: ReactNode
-  required?: boolean
 }
 
 function FormLabel({ children, required, className, ...props }: FormLabelProps) {
@@ -84,19 +49,12 @@ function FormLabel({ children, required, className, ...props }: FormLabelProps) 
   )
 }
 
-// Form input component
-interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  name: string
-}
-
 function FormInput({ name, className, onChange, ...props }: FormInputProps) {
   const { values, setValue } = useFormContext()
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(name, e.target.value)
     onChange?.(e)
   }
-
   return (
     <input
       name={name}
@@ -108,24 +66,8 @@ function FormInput({ name, className, onChange, ...props }: FormInputProps) {
   )
 }
 
-// Compound component export
 export const Form = Object.assign(FormRoot, {
   Field: FormField,
   Label: FormLabel,
   Input: FormInput,
 })
-
-// Usage example:
-/*
-<Form values={formValues} onValuesChange={setFormValues} errors={formErrors}>
-  <Form.Field name="email">
-    <Form.Label htmlFor="email" required>Email</Form.Label>
-    <Form.Input name="email" type="email" id="email" />
-  </Form.Field>
-  
-  <Form.Field name="password">
-    <Form.Label htmlFor="password" required>Password</Form.Label>
-    <Form.Input name="password" type="password" id="password" />
-  </Form.Field>
-</Form>
-*/
