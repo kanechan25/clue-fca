@@ -7,6 +7,7 @@ import { getTypeIcon } from '@/utils'
 import { getTypeColor } from '@/utils'
 import { ChallengeCardProps } from '@/types'
 import { ProgressSummary } from '@/components/ProgressSummary'
+import { Sharing } from './Common/Sharing'
 
 export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCardProps) => {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.1 }}
-      className='bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden mb-16'
+      className='bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 mb-16'
     >
       <div
         onClick={() => {
@@ -55,7 +56,10 @@ export const ChallengeCard = ({ challenge, index, onJoin, onLeave }: ChallengeCa
 
       {/* Content */}
       <div className='p-6'>
-        <p className='text-gray-600 mb-4 line-clamp-2'>{challenge.description}</p>
+        <div className='flex items-center justify-between'>
+          <p className='text-gray-600 mb-4 line-clamp-2'>{challenge.description}</p>
+          <Sharing challengeId={challenge.id} />
+        </div>
 
         {/* Challenge Stats */}
         <div className='grid grid-cols-2 gap-4 mb-6'>

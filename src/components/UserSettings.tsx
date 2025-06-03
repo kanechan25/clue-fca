@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { LogOut, RotateCcw, ChevronDown } from 'lucide-react'
+import { LogOut, RotateCcw, ChevronDown, Settings } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import type { UserSettingsProps } from '@/types'
 import toast from 'react-hot-toast'
@@ -39,6 +39,12 @@ export const UserSettings = ({ user }: UserSettingsProps) => {
   }
 
   const menuItems = [
+    {
+      icon: Settings,
+      label: 'Edit Profile',
+      action: () => {},
+      className: 'text-orange-600 hover:bg-orange-50',
+    },
     {
       icon: RotateCcw,
       label: 'Reset Onboarding',

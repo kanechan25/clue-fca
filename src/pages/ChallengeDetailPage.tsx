@@ -109,7 +109,7 @@ export const ChallengeDetailPage = () => {
               <span>Back to Home</span>
             </button>
             <div className='flex items-center space-x-2'>
-              <Sharing />
+              <Sharing challengeId={challengeId} />
             </div>
           </div>
         </div>

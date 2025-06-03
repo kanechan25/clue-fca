@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { AnimatePresence, motion } from 'framer-motion'
 
-export const Sharing = () => {
+export const Sharing = ({ challengeId }: { challengeId: string }) => {
   const [isShareOpen, setIsShareOpen] = useState(false)
   const shareDropdownRef = useRef<HTMLDivElement>(null)
   const { user } = useFitnessStore()
@@ -21,7 +21,7 @@ export const Sharing = () => {
     }
   }, [])
 
-  const shareUrl = `${window.location.href}?user=${user?.id}`
+  const shareUrl = `${window.location.origin}/challenge/${challengeId}?user=${user?.id}`
   const shareText = `Check out this fitness challenge! Join me and let's reach our goals together! 💪`
 
   const handleCopyLink = () => {

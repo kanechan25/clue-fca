@@ -11,6 +11,9 @@ export interface User {
   email: string
   avatar?: string
   joinedAt: Date
+  fitnessGoals: ChallengeType[]
+  preferredUnits: 'metric' | 'imperial'
+  notificationsEnabled: boolean
 }
 
 export interface UserSettingsProps {
@@ -116,7 +119,6 @@ export interface FitnessStore extends AppState {
   addProgress: (input: ProgressInput) => void
   updateProgress: (challengeId: string, date: string, value: number, notes?: string) => void
   generateLeaderboard: (challengeId: string) => void
-  syncProgress: () => void
   loadMockData: () => void
   resetStore: () => void
 }

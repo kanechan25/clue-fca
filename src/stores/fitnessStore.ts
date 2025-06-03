@@ -28,7 +28,7 @@ export const useFitnessStore = create<FitnessStore>()(
   persist(
     (set, get) => ({
       ...initialState,
-      // TODO
+      // TODO: for edit user profile
       setUser: (user: User) => {
         set({ user })
       },
@@ -40,6 +40,9 @@ export const useFitnessStore = create<FitnessStore>()(
           email: data.email,
           avatar: '👤',
           joinedAt: new Date(),
+          fitnessGoals: data.fitnessGoals,
+          preferredUnits: data.preferredUnits,
+          notificationsEnabled: data.notificationsEnabled,
         }
         set({ user, isOnboarded: true })
       },
@@ -214,13 +217,6 @@ export const useFitnessStore = create<FitnessStore>()(
           },
         }))
       },
-      // TODO
-      syncProgress: () => {
-        set({ isLoading: true })
-        setTimeout(() => {
-          set({ isLoading: false })
-        }, 1000)
-      },
 
       loadMockData: () => {
         const migratedChallenges = mockChallenges.map((challenge) => ({
@@ -236,7 +232,6 @@ export const useFitnessStore = create<FitnessStore>()(
           get().generateLeaderboard(challenge.id)
         })
       },
-
       resetStore: () => {
         localStorage.removeItem('fitness-challenge-store')
         set(initialState)

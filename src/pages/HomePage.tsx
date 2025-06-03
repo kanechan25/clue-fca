@@ -207,7 +207,7 @@ const HomePage = () => {
                   <Dropdown />
                 </div>
 
-                {/* Sort - Enhanced Dropdown */}
+                {/* Sort */}
                 <div className='relative'>
                   <select
                     value={sortBy}
@@ -220,6 +220,7 @@ const HomePage = () => {
                   </select>
                   <Dropdown />
                 </div>
+                {/* Add button: Create/Add a Challenge here */}
               </div>
             </div>
 
