@@ -56,6 +56,12 @@ export interface ChallengeCardProps {
   onJoin?: (challengeId: string) => void
   onLeave?: (challengeId: string) => void
 }
+export interface CreateChallengeModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onCreateChallenge: (challengeData: Challenge) => void
+  currentUser?: User | null
+}
 
 export interface DailyProgress {
   date: string // YYYY-MM-DD format

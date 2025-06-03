@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LogOut, RotateCcw, ChevronDown, Settings } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
+import { useClickOutside } from '@/hooks/useClickOutside'
 import type { UserSettingsProps } from '@/types'
 import toast from 'react-hot-toast'
 
@@ -11,19 +12,13 @@ export const UserSettings = ({ user }: UserSettingsProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const { resetStore } = useFitnessStore()
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-        setShowConfirmReset(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  useClickOutside({
+    ref: dropdownRef,
+    handler: () => {
+      setIsOpen(false)
+      setShowConfirmReset(false)
+    },
+  })
 
   const handleResetOnboarding = () => {
     resetStore()

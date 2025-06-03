@@ -69,7 +69,6 @@ export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) =
           >
             <div className='flex items-center justify-between'>
               <div className='flex items-center space-x-4'>
-                {/* Rank */}
                 <div className='flex-shrink-0'>{getRankIcon(entry.rank)}</div>
 
                 {/* User Info */}
@@ -86,7 +85,6 @@ export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) =
                   </div>
                 </div>
 
-                {/* Badge */}
                 {entry.badge && <span className='text-xl'>{entry.badge}</span>}
               </div>
 

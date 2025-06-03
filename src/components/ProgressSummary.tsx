@@ -57,7 +57,7 @@ export const ProgressSummary = ({ challengeId, compact = false }: ProgressSummar
           </p>
         </div>
 
-        {/* Today's Progress */}
+        {/* Today Progress */}
         <div className='text-center'>
           <p className='text-sm text-gray-600 mb-2'>Today's Progress</p>
           <CircularProgress percentage={todayPercentage} size={120} strokeWidth={10} color='#3B82F6' />

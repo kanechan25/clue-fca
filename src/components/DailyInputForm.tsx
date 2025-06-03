@@ -1,16 +1,17 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Save, Calendar } from 'lucide-react'
+import { Plus, Save } from 'lucide-react'
 import { format } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import toast from 'react-hot-toast'
 import { DailyInputFormProps, Unit } from '@/types'
+import { getUnitLabel } from '@/utils'
+import { DatePicker } from '@/components/Common/DatePicker'
 
 export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) => {
   const { challenges, userProgress, addProgress } = useFitnessStore()
   const challenge = challenges.find((c) => c.id === challengeId)
   const progress = userProgress[challengeId]
-  const dateInputRef = useRef<HTMLInputElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
@@ -27,12 +28,10 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (!value || isNaN(Number(value)) || Number(value) < 0) {
       toast.error('Please enter a valid positive number')
       return
     }
-
     setIsLoading(true)
 
     try {
@@ -42,14 +41,11 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
         value: Number(value),
         notes: notes.trim() || undefined,
       })
-
-      toast.success(existingEntry ? 'Progress updated successfully!' : 'Progress added successfully!')
-
-      // Reset form
       setValue('')
       setNotes('')
       setIsOpen(false)
       onSuccess?.()
+      toast.success(existingEntry ? 'Progress updated successfully!' : 'Progress added successfully!')
     } catch (error) {
       toast.error('Failed to save progress')
       console.error('Error saving progress:', error)
@@ -60,7 +56,6 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
 
   const handleOpen = () => {
     setIsOpen(true)
-    // Pre-fill with existing data if available
     if (existingEntry) {
       setValue(existingEntry.value.toString())
       setNotes(existingEntry.notes || '')
@@ -71,22 +66,6 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
     setIsOpen(false)
     setValue('')
     setNotes('')
-  }
-
-  const handleDateClick = () => {
-    const input = dateInputRef.current
-    if (input) {
-      try {
-        if ('showPicker' in input && typeof (input as any).showPicker === 'function') {
-          ;(input as any).showPicker()
-        } else {
-          input.focus()
-          input.click()
-        }
-      } catch {
-        input.focus()
-      }
-    }
   }
 
   if (!isOpen) {
@@ -119,46 +98,11 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
 
       <form onSubmit={handleSubmit} className='space-y-4'>
         {/* Date Input */}
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-2'>
-            <Calendar className='w-4 h-4 inline mr-1' />
-            Date
-          </label>
-          <div className='relative flex'>
-            <input
-              type='date'
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              max={format(new Date(), 'yyyy-MM-dd')}
-              className='flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 transition-colors'
-              required
-              ref={dateInputRef}
-            />
-            <button
-              type='button'
-              onClick={handleDateClick}
-              className='px-3 py-2 bg-gray-50 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors'
-              title='Open calendar'
-            >
-              <Calendar className='w-4 h-4 text-gray-600' />
-            </button>
-          </div>
-          <p className='text-xs text-gray-500 mt-1'>Click the calendar icon to open date picker</p>
-        </div>
+        <DatePicker label='Date' value={date} onChange={setDate} max={format(new Date(), 'yyyy-MM-dd')} required />
 
         {/* Value Input */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 mb-2'>
-            {challenge.unit === Unit.STEPS
-              ? 'Steps'
-              : challenge.unit === Unit.MILES
-                ? 'Distance (miles)'
-                : challenge.unit === Unit.CALORIES
-                  ? 'Calories'
-                  : challenge.unit === Unit.POUNDS
-                    ? 'Weight Lost (lbs)'
-                    : `Value (${challenge.unit})`}
-          </label>
+          <label className='block text-sm font-medium text-gray-700 mb-2'>{getUnitLabel(challenge.unit)}</label>
           <input
             type='number'
             value={value}

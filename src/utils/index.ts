@@ -1,4 +1,4 @@
-import { ChallengeType } from '@/types'
+import { ChallengeType, Unit } from '@/types'
 
 export const getTypeIcon = (type: ChallengeType) => {
   switch (type) {
@@ -33,7 +33,22 @@ export const getTypeColor = (type: string) => {
       return 'from-gray-500 to-gray-600'
   }
 }
-
+export const getUnitLabel = (unit: Unit): string => {
+  switch (unit) {
+    case Unit.STEPS:
+      return 'Steps'
+    case Unit.MILES:
+      return 'Distance (miles)'
+    case Unit.CALORIES:
+      return 'Calories'
+    case Unit.POUNDS:
+      return 'Weight Lost (lbs)'
+    case Unit.MINUTES:
+      return 'Minutes'
+    default:
+      return `Value (${unit})`
+  }
+}
 export const getRankBg = (rank: number) => {
   switch (rank) {
     case 1:

@@ -1,21 +1,23 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Filter, Trophy, Users, TrendingUp } from 'lucide-react'
+import { Search, Filter, Trophy, Users, TrendingUp, Plus } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ChallengeCard } from '@/components/ChallengeCard'
 import { UserSettings } from '@/components/UserSettings'
+import { CreateChallengeModal } from '@/components/CreateChallengeModal'
 import toast from 'react-hot-toast'
 import Dropdown from '@/components/Common/Dropdown'
 import { formatProgressWithUnit } from '@/utils/format'
-import { ChallengeType } from '@/types'
+import { Challenge, ChallengeType } from '@/types'
 import { filterOptions } from '@/constants/mock'
 
 const HomePage = () => {
-  const { user, challenges, userProgress, loadMockData, generateLeaderboard } = useFitnessStore()
+  const { user, challenges, userProgress, loadMockData, generateLeaderboard, addChallenge } = useFitnessStore()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all' | 'actives'>('all')
   const [sortBy, setSortBy] = useState<'name' | 'participants' | 'recent'>('recent')
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   useEffect(() => {
     if (challenges.length === 0) {
@@ -220,7 +222,15 @@ const HomePage = () => {
                   </select>
                   <Dropdown />
                 </div>
-                {/* Add button: Create/Add a Challenge here */}
+
+                {/* Create Challenge Button */}
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className='flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200 whitespace-nowrap'
+                >
+                  <Plus className='w-4 h-4' />
+                  <span>Create Challenge</span>
+                </button>
               </div>
             </div>
 
@@ -247,6 +257,18 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Create Challenge Modal */}
+      <CreateChallengeModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreateChallenge={(challengeData: Challenge) => {
+          addChallenge(challengeData)
+          setIsCreateModalOpen(false)
+          toast.success('Challenge created successfully! 🎉')
+        }}
+        currentUser={user}
+      />
     </div>
   )
 }

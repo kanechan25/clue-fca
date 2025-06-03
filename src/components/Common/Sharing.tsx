@@ -1,6 +1,7 @@
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { Link, Share2, ChevronDown } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import { useClickOutside } from '@/hooks/useClickOutside'
 import toast from 'react-hot-toast'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -8,19 +9,13 @@ export const Sharing = ({ challengeId }: { challengeId: string }) => {
   const [isShareOpen, setIsShareOpen] = useState(false)
   const shareDropdownRef = useRef<HTMLDivElement>(null)
   const { user } = useFitnessStore()
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (shareDropdownRef.current && !shareDropdownRef.current.contains(event.target as Node)) {
-        setIsShareOpen(false)
-      }
-    }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+  useClickOutside({
+    ref: shareDropdownRef,
+    handler: () => setIsShareOpen(false),
+  })
 
+  // In the future, just needs challengeId and user, we can share any challenge with any user
   const shareUrl = `${window.location.origin}/challenge/${challengeId}?user=${user?.id}`
   const shareText = `Check out this fitness challenge! Join me and let's reach our goals together! 💪`
 

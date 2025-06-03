@@ -212,3 +212,16 @@ export const filterOptions: { value: ChallengeType | 'all' | 'actives'; label: s
   { value: ChallengeType.WEIGHT_LOSS, label: 'Weight Loss', icon: '⚖️' },
   { value: ChallengeType.WORKOUT_TIME, label: 'Workouts', icon: '💪' },
 ]
+
+export const challengeEmojis = [
+  { emoji: '🚶', label: 'Walking' },
+  { emoji: '🏃', label: 'Running' },
+  { emoji: '🔥', label: 'Calories' },
+  { emoji: '⚖️', label: 'Weight' },
+  { emoji: '💪', label: 'Strength' },
+  { emoji: '🏋️', label: 'Gym' },
+  { emoji: '🚴', label: 'Cycling' },
+  { emoji: '🏊', label: 'Swimming' },
+  { emoji: '🧘', label: 'Yoga' },
+  { emoji: '⏰', label: 'Time' },
+]
