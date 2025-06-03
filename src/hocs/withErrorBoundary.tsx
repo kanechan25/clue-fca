@@ -1,6 +1,6 @@
+import { ErrorBoundaryProps, ErrorBoundaryState, ErrorBoundaryOptions } from '@/types'
 import React from 'react'
 
-// Error boundary class component
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
@@ -45,7 +45,6 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-// HOC that wraps components with error boundary
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   options?: Partial<ErrorBoundaryOptions>,
@@ -62,13 +61,10 @@ export function withErrorBoundary<P extends object>(
       </ErrorBoundary>
     )
   }
-
   ComponentWithErrorBoundary.displayName = `withErrorBoundary(${Component.displayName || Component.name})`
-
   return ComponentWithErrorBoundary
 }
 
-// Alternative HOC with custom error handling
 export function withCustomErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   FallbackComponent: React.ComponentType<{ error: Error | null; retry: () => void }>,
@@ -83,29 +79,6 @@ export function withCustomErrorBoundary<P extends object>(
       </ErrorBoundary>
     )
   }
-
   ComponentWithCustomErrorBoundary.displayName = `withCustomErrorBoundary(${Component.displayName || Component.name})`
-
   return ComponentWithCustomErrorBoundary
-}
-
-// Types
-interface ErrorBoundaryState {
-  hasError: boolean
-  error: Error | null
-}
-
-interface ErrorBoundaryProps {
-  children: React.ReactNode
-  fallback?: (error: Error | null) => React.ReactNode
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
-  errorMessage?: string
-  showRetry?: boolean
-}
-
-interface ErrorBoundaryOptions {
-  fallback?: (error: Error | null) => React.ReactNode
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
-  errorMessage?: string
-  showRetry?: boolean
 }

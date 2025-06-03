@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react'
 
-// Simple toggle hook
 export function useToggle(initialValue = false) {
   const [value, setValue] = useState(initialValue)
 
@@ -30,7 +29,6 @@ export function useToggle(initialValue = false) {
   }
 }
 
-// Multi-state toggle hook for cycling through multiple values
 export function useMultiToggle<T>(values: T[], initialIndex = 0) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex)
 
@@ -71,7 +69,6 @@ export function useMultiToggle<T>(values: T[], initialIndex = 0) {
   }
 }
 
-// Toggle hook with persistence
 export function usePersistentToggle(key: string, initialValue = false) {
   const [value, setValue] = useState(() => {
     if (typeof window !== 'undefined') {

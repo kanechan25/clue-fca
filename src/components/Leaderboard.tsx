@@ -1,10 +1,23 @@
 import { motion } from 'framer-motion'
-import { Trophy, Medal, Award, Users } from 'lucide-react'
+import { Award, Medal, Trophy, Users } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { getRankBg } from '@/utils'
 import { formatNumberDecimal } from '@/utils/format'
 import { LeaderboardEntry, LeaderboardProps } from '@/types/user'
 import { Unit } from '@/types/challenge'
+
+const getRankIcon = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return <Trophy className='w-5 h-5 text-yellow-500' />
+    case 2:
+      return <Medal className='w-5 h-5 text-gray-400' />
+    case 3:
+      return <Award className='w-5 h-5 text-amber-600' />
+    default:
+      return <span className='w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500'>#{rank}</span>
+  }
+}
 
 export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) => {
   const { leaderboards, challenges } = useFitnessStore()
@@ -16,19 +29,6 @@ export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) =
   }
 
   const displayEntries = leaderboard.slice(0, maxEntries)
-
-  const getRankIcon = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return <Trophy className='w-5 h-5 text-yellow-500' />
-      case 2:
-        return <Medal className='w-5 h-5 text-gray-400' />
-      case 3:
-        return <Award className='w-5 h-5 text-amber-600' />
-      default:
-        return <span className='w-5 h-5 flex items-center justify-center text-sm font-bold text-gray-500'>#{rank}</span>
-    }
-  }
 
   const getProgressPercentage = (entry: LeaderboardEntry) => {
     const totalGoal = challenge.goal * challenge.duration

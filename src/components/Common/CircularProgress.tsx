@@ -15,9 +15,7 @@ export const CircularProgress = ({
   return (
     <div className='relative'>
       <svg width={size} height={size} className='transform -rotate-90'>
-        {/* Background circle */}
         <circle cx={size / 2} cy={size / 2} r={radius} stroke='#E5E7EB' strokeWidth={strokeWidth} fill='transparent' />
-        {/* Progress circle */}
         <motion.circle
           cx={size / 2}
           cy={size / 2}

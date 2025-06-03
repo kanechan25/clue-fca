@@ -24,7 +24,6 @@ export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) 
     return null
   }
 
-  // Find existing entry for the selected date
   const existingEntry = progress.dailyEntries.find((entry) => entry.date === date)
 
   const handleSubmit = async (e: React.FormEvent) => {

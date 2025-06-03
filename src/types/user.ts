@@ -46,3 +46,9 @@ export interface LeaderboardProps {
   challengeId: string
   maxEntries?: number
 }
+
+export interface AuthStateProps {
+  user: any
+  isAuthenticated: boolean
+  isOnboarded: boolean
+}

@@ -68,3 +68,49 @@ export interface CircularProgressProps {
   strokeWidth?: number
   color?: string
 }
+
+export interface ErrorBoundaryState {
+  hasError: boolean
+  error: Error | null
+}
+
+export interface ErrorBoundaryProps {
+  children: React.ReactNode
+  fallback?: (error: Error | null) => React.ReactNode
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  errorMessage?: string
+  showRetry?: boolean
+}
+
+export interface ErrorBoundaryOptions {
+  fallback?: (error: Error | null) => React.ReactNode
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  errorMessage?: string
+  showRetry?: boolean
+}
+
+export interface LoadingProps {
+  isLoading?: boolean
+  loadingText?: string
+}
+
+export interface LoadingStateProps extends LoadingProps {
+  startLoading: (text?: string) => void
+  stopLoading: () => void
+}
+
+export interface ToastProps {
+  showSuccess: (message: string) => void
+  showError: (message: string) => void
+  showInfo: (message: string) => void
+  showLoading: (message: string) => string
+  dismissToast: (toastId: string) => void
+  dismissAllToasts: () => void
+}
+
+export interface AutoToastProps {
+  onSuccess?: (result?: any) => void
+  onError?: (error?: any) => void
+  successMessage?: string
+  errorMessage?: string
+}
