@@ -4,7 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { vi } from 'vitest'
 import { FitnessStore } from '@/types'
 import { mockChallenges, mockUsers } from '@/constants/mock'
-import { User, Challenge } from '@/types'
+import { User } from '@/types/user'
+import { Challenge } from '@/types/challenge'
 
 export const mockUser: User = mockUsers[0]
 export const mockChallenge: Challenge = mockChallenges[0]

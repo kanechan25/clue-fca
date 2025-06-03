@@ -1,4 +1,4 @@
-import { ChallengeType, Unit } from '@/types'
+import { ChallengeType, Unit } from '@/types/challenge'
 import { TrendingUp, Award } from 'lucide-react'
 
 export const onboardSteps = [

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, ReactNode } from 'react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import { Challenge, UserProgress, LeaderboardEntry, ProgressInput } from '@/types'
+import { Challenge } from '@/types/challenge'
+import { UserProgress, LeaderboardEntry } from '@/types/user'
+import { ProgressInput } from '@/types'
 
 interface ChallengeContextType {
   challenges: Challenge[]

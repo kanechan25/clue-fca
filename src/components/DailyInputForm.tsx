@@ -4,9 +4,10 @@ import { Plus, Save } from 'lucide-react'
 import { format } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import toast from 'react-hot-toast'
-import { DailyInputFormProps, Unit } from '@/types'
 import { getUnitLabel } from '@/utils'
 import { DatePicker } from '@/components/Common/DatePicker'
+import { DailyInputFormProps } from '@/types/user'
+import { Unit } from '@/types/challenge'
 
 export const DailyInputForm = ({ challengeId, onSuccess }: DailyInputFormProps) => {
   const { challenges, userProgress, addProgress } = useFitnessStore()

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, ChevronLeft, Check, User, Target, Bell } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import { type OnboardingData, type ChallengeType } from '@/types'
+import { type OnboardingData } from '@/types'
 import { challengeTypes, onboardSteps } from '@/constants'
 import toast from 'react-hot-toast'
+import { ChallengeType } from '@/types/challenge'
 
 export const Onboarding = () => {
   const { completeOnboarding } = useFitnessStore()

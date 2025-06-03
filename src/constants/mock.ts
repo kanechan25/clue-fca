@@ -1,4 +1,5 @@
-import { Challenge, ChallengeType, Unit, User } from '@/types'
+import { Challenge, ChallengeType, Unit } from '@/types/challenge'
+import { User } from '@/types/user'
 import { addDays } from 'date-fns'
 
 export const mockChallenges: Challenge[] = [

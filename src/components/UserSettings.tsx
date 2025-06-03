@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { LogOut, RotateCcw, ChevronDown, Settings } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { useClickOutside } from '@/hooks/useClickOutside'
-import type { UserSettingsProps } from '@/types'
+import { UserSettingsProps } from '@/types/user'
 import toast from 'react-hot-toast'
 
 export const UserSettings = memo(({ user }: UserSettingsProps) => {

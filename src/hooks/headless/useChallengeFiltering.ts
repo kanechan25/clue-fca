@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Challenge, ChallengeType } from '@/types'
+import { Challenge, ChallengeType } from '@/types/challenge'
 
 // Types for filtering options
 type FilterType = ChallengeType | 'all' | 'actives'

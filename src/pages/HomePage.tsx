@@ -13,7 +13,7 @@ import { CreateChallengeModal } from '@/components/CreateChallengeModal'
 import { Modal } from '@/components/Compound/Modal'
 import Dropdown from '@/components/Common/Dropdown'
 import { formatProgressWithUnit } from '@/utils/format'
-import { Challenge, ChallengeType } from '@/types'
+import { Challenge, ChallengeType } from '@/types/challenge'
 import { filterOptions } from '@/constants/mock'
 
 const HomePage = () => {

@@ -1,4 +1,5 @@
-import { Unit, type Challenge, type UserProgress } from '@/types'
+import { Challenge, Unit } from '@/types/challenge'
+import { UserProgress } from '@/types/user'
 
 export const formatNumberDecimal = (num: number | string, decimals = 2) => {
   if (Number.isNaN(num)) {

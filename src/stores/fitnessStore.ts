@@ -1,17 +1,9 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type {
-  AppState,
-  Challenge,
-  User,
-  UserProgress,
-  DailyProgress,
-  ProgressInput,
-  LeaderboardEntry,
-  OnboardingData,
-  FitnessStore,
-} from '@/types'
+import type { AppState, ProgressInput, OnboardingData, FitnessStore } from '@/types'
 import { generateMockProgress, mockChallenges, mockUsers } from '@/constants/mock'
+import { DailyProgress, LeaderboardEntry, User, UserProgress } from '@/types/user'
+import { Challenge } from '@/types/challenge'
 
 const initialState: AppState = {
   user: null,

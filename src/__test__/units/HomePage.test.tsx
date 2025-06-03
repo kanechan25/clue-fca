@@ -3,9 +3,9 @@ import { screen, fireEvent, waitFor } from '@testing-library/react'
 import HomePage from '@/pages/HomePage'
 import { render, mockUser } from '../utils'
 import { mockToast } from '../setup'
-import { ChallengeType, Unit } from '@/types'
 import { addDays } from 'date-fns'
 import { mockChallenges } from '@/constants/mock'
+import { ChallengeType, Unit } from '@/types/challenge'
 
 const mockUseFitnessStore = vi.fn()
 vi.mock('@/stores/fitnessStore', () => ({

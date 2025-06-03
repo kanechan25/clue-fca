@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion'
 import { Trophy, Medal, Award, Users } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import { Unit, type LeaderboardEntry, type LeaderboardProps } from '@/types'
 import { getRankBg } from '@/utils'
 import { formatNumberDecimal } from '@/utils/format'
+import { LeaderboardEntry, LeaderboardProps } from '@/types/user'
+import { Unit } from '@/types/challenge'
 
 export const Leaderboard = ({ challengeId, maxEntries = 5 }: LeaderboardProps) => {
   const { leaderboards, challenges } = useFitnessStore()

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react'
 import { useFitnessStore } from '@/stores/fitnessStore'
-import { User, OnboardingData } from '@/types'
+import { User } from '@/types/user'
+import { OnboardingData } from '@/types'
 
 // Auth context interface
 interface AuthContextType {

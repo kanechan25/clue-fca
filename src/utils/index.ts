@@ -1,4 +1,4 @@
-import { ChallengeType, Unit } from '@/types'
+import { ChallengeType, Unit } from '@/types/challenge'
 
 export const getTypeIcon = (type: ChallengeType) => {
   switch (type) {
