@@ -72,6 +72,17 @@ A modern React web application for fitness challenge tracking, progress monitori
    cd clue-fca
    ```
 
+#### Management Commands
+
+```bash
+./deploy.sh                # Run Docker just one-line
+./deploy.sh logs           # View live logs
+./deploy.sh status         # Check application status
+./deploy.sh stop           # Stop the application
+./deploy.sh restart        # Restart the application
+./deploy.sh clean          # Clean up containers and images
+```
+
 2. **Install dependencies**
 
    ```bash
