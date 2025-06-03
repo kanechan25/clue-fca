@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react'
 
-// Headless modal hook that provides state and actions without UI
 export function useModal(initialOpen = false) {
   const [isOpen, setIsOpen] = useState(initialOpen)
 
@@ -24,7 +23,6 @@ export function useModal(initialOpen = false) {
   }
 }
 
-// Enhanced modal hook with additional features
 export function useEnhancedModal(initialOpen = false) {
   const [isOpen, setIsOpen] = useState(initialOpen)
   const [isLoading, setIsLoading] = useState(false)
@@ -73,7 +71,6 @@ export function useEnhancedModal(initialOpen = false) {
   }
 }
 
-// Modal hook with validation and submission handling
 export function useFormModal<T = any>(
   onSubmit?: (data: T) => Promise<void> | void,
   validate?: (data: T) => string | null,
@@ -102,10 +99,8 @@ export function useFormModal<T = any>(
           return
         }
       }
-
       setIsSubmitting(true)
       setError(null)
-
       try {
         await onSubmit?.(data)
         close()

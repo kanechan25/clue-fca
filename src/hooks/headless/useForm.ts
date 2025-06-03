@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react'
 
-// Generic form hook
 export function useForm<T extends Record<string, any>>(initialValues: T) {
   const [values, setValues] = useState<T>(initialValues)
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
@@ -9,8 +8,6 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
   const setValue = useCallback(
     (name: keyof T, value: any) => {
       setValues((prev) => ({ ...prev, [name]: value }))
-
-      // Clear error when user starts typing
       if (errors[name]) {
         setErrors((prev) => ({ ...prev, [name]: undefined }))
       }
@@ -53,7 +50,6 @@ export function useForm<T extends Record<string, any>>(initialValues: T) {
   }
 }
 
-// Hook specifically for the onboarding form (preserving original logic)
 export function useOnboardingForm() {
   const initialValues = {
     name: '',
@@ -62,9 +58,7 @@ export function useOnboardingForm() {
     preferredUnits: 'metric' as 'metric' | 'imperial',
     notificationsEnabled: true,
   }
-
   const form = useForm(initialValues)
-
   const validateStep = (step: number) => {
     switch (step) {
       case 2:
@@ -92,7 +86,6 @@ export function useOnboardingForm() {
   }
 }
 
-// Hook for challenge creation form
 export function useCreateChallengeForm() {
   const initialValues = {
     name: '',
