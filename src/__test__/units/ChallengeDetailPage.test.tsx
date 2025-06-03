@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
-import { ChallengeDetailPage } from '@/pages/ChallengeDetailPage'
+import ChallengeDetailPage from '@/pages/ChallengeDetailPage'
 import { render, mockUser, mockChallenge } from '../utils'
 import { mockToast } from '../setup'
 

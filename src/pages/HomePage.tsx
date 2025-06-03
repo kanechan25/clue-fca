@@ -1,76 +1,50 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
-import toast from 'react-hot-toast'
 import { Search, Filter, Trophy, Users, TrendingUp, Plus } from 'lucide-react'
-import { useFitnessStore } from '@/stores/fitnessStore'
+import { useChallengeFiltering } from '@/hooks/headless/useChallengeFiltering'
+import { useModal } from '@/hooks/headless/useModal'
+import { useChallenge } from '@/providers/ChallengeProvider'
+import { useAuth } from '@/providers/AuthProvider'
+import { useNotification } from '@/providers/NotificationProvider'
+import { withAuth, withLoading, withToast } from '@/hocs'
 import { ChallengeCard } from '@/components/ChallengeCard'
 import { UserSettings } from '@/components/UserSettings'
 import { CreateChallengeModal } from '@/components/CreateChallengeModal'
+import { Modal } from '@/components/Compound/Modal'
 import Dropdown from '@/components/Common/Dropdown'
 import { formatProgressWithUnit } from '@/utils/format'
 import { Challenge, ChallengeType } from '@/types'
 import { filterOptions } from '@/constants/mock'
 
 const HomePage = () => {
-  const { user, challenges, userProgress, loadMockData, addChallenge } = useFitnessStore()
+  const { challenges, userProgress, loadMockData, addChallenge } = useChallenge()
+  const { user } = useAuth()
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all' | 'actives'>('all')
-  const [sortBy, setSortBy] = useState<'name' | 'participants' | 'recent'>('recent')
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedFilter,
+    setSelectedFilter,
+    sortBy,
+    setSortBy,
+    filteredChallenges,
+    joinedChallenges,
+    totalParticipants,
+  } = useChallengeFiltering(challenges, userProgress)
 
+  const createModalState = useModal()
+  const { showSuccess } = useNotification()
   useEffect(() => {
     if (challenges.length === 0) {
       loadMockData()
     }
   }, [challenges.length, loadMockData])
 
-  const filteredChallenges = useMemo(() => {
-    const filtered = challenges?.filter((challenge) => {
-      const matchesSearch =
-        challenge.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        challenge.description.toLowerCase().includes(searchQuery.toLowerCase())
-      let matchesFilter = false
-      if (selectedFilter === 'all') {
-        matchesFilter = true
-      } else if (selectedFilter === 'actives') {
-        matchesFilter = !!userProgress[challenge.id]
-      } else {
-        matchesFilter = challenge.type === selectedFilter
-      }
-      return matchesSearch && matchesFilter && challenge.isActive
-    })
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name)
-        case 'participants':
-          return (
-            (Array.isArray(b?.participants) ? b.participants.length : 0) -
-            (Array.isArray(a?.participants) ? a.participants.length : 0)
-          )
-        case 'recent':
-        default:
-          return new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-      }
-    })
-
-    return filtered
-  }, [challenges, searchQuery, selectedFilter, sortBy, userProgress])
-
-  const joinedChallenges = () => challenges.filter((challenge) => userProgress[challenge.id])
   const formattedProgress = formatProgressWithUnit(userProgress, challenges)
-
-  const totalParticipants = () =>
-    challenges.reduce(
-      (sum, challenge) => sum + (Array.isArray(challenge?.participants) ? challenge.participants.length : 0),
-      0,
-    )
-
   const handleCreateChallenge = (challengeData: Challenge) => {
     addChallenge(challengeData)
-    setIsCreateModalOpen(false)
-    toast.success('Challenge created successfully! 🎉')
+    createModalState.close()
+    showSuccess('Challenge created successfully! 🎉')
   }
 
   return (
@@ -165,7 +139,7 @@ const HomePage = () => {
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           <div className='col-span-1 lg:col-span-3'>
-            {/* Search and Filters */}
+            {/* Search and Filters*/}
             <div className='bg-white rounded-lg shadow-md p-6 mb-6'>
               <div className='flex flex-col md:flex-row gap-4'>
                 {/* Search */}
@@ -213,7 +187,7 @@ const HomePage = () => {
 
                 {/* Create Challenge Button */}
                 <button
-                  onClick={() => setIsCreateModalOpen(true)}
+                  onClick={createModalState.open}
                   className='flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2.5 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200 whitespace-nowrap'
                 >
                   <Plus className='w-4 h-4' />
@@ -240,14 +214,24 @@ const HomePage = () => {
         </div>
       </div>
 
-      <CreateChallengeModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onCreateChallenge={handleCreateChallenge}
-        currentUser={user}
-      />
+      <Modal isOpen={createModalState.isOpen} onClose={createModalState.close}>
+        <Modal.Content>
+          <Modal.Header>
+            <h2 className='text-xl font-semibold'>Create New Challenge</h2>
+          </Modal.Header>
+          <Modal.Body>
+            <CreateChallengeModal
+              isOpen={createModalState.isOpen}
+              onClose={createModalState.close}
+              onCreateChallenge={handleCreateChallenge}
+              currentUser={user}
+            />
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </div>
   )
 }
 
-export default HomePage
+// Apply HOCs to enhance the component with auth, loading, and toast capabilities
+export default withAuth(withLoading(withToast(HomePage)))

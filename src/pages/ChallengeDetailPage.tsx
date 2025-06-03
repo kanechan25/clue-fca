@@ -1,24 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Target } from 'lucide-react'
 import { differenceInDays } from 'date-fns'
-import { useFitnessStore } from '@/stores/fitnessStore'
+import { useChallenge } from '@/providers/ChallengeProvider'
+import { useNotification } from '@/providers/NotificationProvider'
+import { withAuth, withLoading, withToast } from '@/hocs'
+import { Tabs } from '@/components/Compound/Tabs'
 import { ProgressSummary } from '@/components/ProgressSummary'
 import { Leaderboard } from '@/components/Leaderboard'
 import { DailyInputForm } from '@/components/DailyInputForm'
-import toast from 'react-hot-toast'
 import { Sharing } from '@/components/Common/Sharing'
-import { Tab, tabs } from '@/constants'
+import { tabs } from '@/constants'
 import ChallengeNotFound from './ChallengeNotFound'
 
-export const ChallengeDetailPage = () => {
+const ChallengeDetailPage = () => {
   const { challengeId } = useParams<{ challengeId: string }>()
-  const { challenges, userProgress, leaderboards, generateLeaderboard, joinChallenge, leaveChallenge } =
-    useFitnessStore()
+  const { challenges, userProgress, leaderboards, generateLeaderboard, joinChallenge, leaveChallenge } = useChallenge()
+  const { showSuccess } = useNotification()
   const challenge = challenges.find((c) => c.id === challengeId)
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.Progress)
 
   const progress = challengeId ? userProgress[challengeId] : null
   const leaderboard = challengeId ? leaderboards[challengeId] || [] : []
@@ -41,47 +42,11 @@ export const ChallengeDetailPage = () => {
   const handleJoinLeave = () => {
     if (isJoined) {
       leaveChallenge(challengeId)
-      toast.success(`Left ${challenge.name}`)
+      showSuccess(`Left ${challenge.name}`)
     } else {
       joinChallenge(challengeId)
-      toast.success(`Joined ${challenge.name}! 🎉`)
+      showSuccess(`Joined ${challenge.name}! 🎉`)
       generateLeaderboard(challengeId)
-    }
-  }
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'progress':
-        return (
-          <div className='space-y-6'>
-            {isJoined ? (
-              <>
-                <ProgressSummary challengeId={challengeId} />
-                <DailyInputForm challengeId={challengeId} />
-              </>
-            ) : (
-              <div className='bg-white rounded-lg shadow-md p-8 text-center'>
-                <Target className='w-12 h-12 text-blue-500 mx-auto mb-4' />
-                <h3 className='text-lg font-semibold text-gray-800 mb-2'>Join to Track Progress</h3>
-                <p className='text-gray-600 mb-6'>
-                  Join this challenge to start tracking your daily progress and compete with others!
-                </p>
-                <button
-                  onClick={handleJoinLeave}
-                  className='bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200'
-                >
-                  Join Challenge
-                </button>
-              </div>
-            )}
-          </div>
-        )
-
-      case 'leaderboard':
-        return <Leaderboard challengeId={challengeId} />
-
-      default:
-        return null
     }
   }
 
@@ -161,39 +126,63 @@ export const ChallengeDetailPage = () => {
         </motion.div>
 
         {/* Tabs */}
-        <div className='mb-8'>
-          <div className='border-b border-gray-200'>
-            <nav className='-mb-px flex space-x-8'>
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  <tab.icon className='w-4 h-4' />
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </nav>
-          </div>
-        </div>
+        <Tabs defaultTab='progress' className='mb-8'>
+          <Tabs.List className='border-b border-gray-200 -mb-px flex space-x-8'>
+            {tabs.map((tab) => (
+              <Tabs.Tab
+                key={tab.id}
+                value={tab.id}
+                className='flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm transition-colors'
+              >
+                <tab.icon className='w-4 h-4' />
+                <span>{tab.label}</span>
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
 
-        {/* Tab Content */}
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {renderTabContent()}
-        </motion.div>
+          <Tabs.Panels>
+            {/* Progress Tab Content */}
+            <Tabs.Panel value='progress'>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className='space-y-6'
+              >
+                {isJoined ? (
+                  <>
+                    <ProgressSummary challengeId={challengeId} />
+                    <DailyInputForm challengeId={challengeId} />
+                  </>
+                ) : (
+                  <div className='bg-white rounded-lg shadow-md p-8 text-center'>
+                    <Target className='w-12 h-12 text-blue-500 mx-auto mb-4' />
+                    <h3 className='text-lg font-semibold text-gray-800 mb-2'>Join to Track Progress</h3>
+                    <p className='text-gray-600 mb-6'>
+                      Join this challenge to start tracking your daily progress and compete with others!
+                    </p>
+                    <button
+                      onClick={handleJoinLeave}
+                      className='bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200'
+                    >
+                      Join Challenge
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            </Tabs.Panel>
+
+            {/* Leaderboard Tab Content */}
+            <Tabs.Panel value='leaderboard'>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                <Leaderboard challengeId={challengeId} />
+              </motion.div>
+            </Tabs.Panel>
+          </Tabs.Panels>
+        </Tabs>
       </div>
     </div>
   )
 }
 
-export default ChallengeDetailPage
+export default withAuth(withLoading(withToast(ChallengeDetailPage)))
