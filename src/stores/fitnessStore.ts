@@ -11,7 +11,7 @@ import type {
   OnboardingData,
   FitnessStore,
 } from '@/types'
-import { mockChallenges, mockUsers } from '@/constants/mock'
+import { generateMockProgress, mockChallenges, mockUsers } from '@/constants/mock'
 
 const initialState: AppState = {
   user: null,
@@ -28,7 +28,7 @@ export const useFitnessStore = create<FitnessStore>()(
   persist(
     (set, get) => ({
       ...initialState,
-
+      // TODO
       setUser: (user: User) => {
         set({ user })
       },
@@ -43,7 +43,7 @@ export const useFitnessStore = create<FitnessStore>()(
         }
         set({ user, isOnboarded: true })
       },
-
+      // TODO
       addChallenge: (challengeData) => {
         const challenge: Challenge = {
           ...challengeData,
@@ -143,7 +143,7 @@ export const useFitnessStore = create<FitnessStore>()(
 
         get().generateLeaderboard(challengeId)
       },
-
+      // TODO
       updateProgress: (challengeId: string, date: string, value: number, notes?: string) => {
         get().addProgress({ challengeId, date, value, notes })
       },
@@ -153,31 +153,6 @@ export const useFitnessStore = create<FitnessStore>()(
         const challenge = state.challenges.find((c) => c.id === challengeId)
         if (!challenge) return
 
-        // Generate mock progress that respects the challenge unit and goal
-        const generateMockProgress = (challengeGoal: number, challengeDuration: number, unit: string) => {
-          let baseMultiplier = 1
-          switch (unit) {
-            case 'steps':
-              baseMultiplier = Math.random() * 0.8 + 0.5 // 50-130% of daily goal
-              break
-            case 'miles':
-              baseMultiplier = Math.random() * 0.6 + 0.4 // 40-100% of daily goal
-              break
-            case 'calories':
-              baseMultiplier = Math.random() * 0.9 + 0.3 // 30-120% of daily goal
-              break
-            case 'lbs':
-              baseMultiplier = Math.random() * 0.7 + 0.2 // 20-90% of weekly goal
-              break
-            default:
-              baseMultiplier = Math.random() * 0.8 + 0.3
-          }
-
-          return challengeGoal * challengeDuration * baseMultiplier
-        }
-
-        // Always generate exactly 5 mock competitors
-        // First try from participants, fallback to all mock users if not enough
         let availableMockUsers = mockUsers
         if (Array.isArray(challenge?.participants) && challenge.participants.length > 0) {
           const participantUsers = mockUsers.filter((user) => challenge.participants.includes(user.id))
@@ -239,9 +214,8 @@ export const useFitnessStore = create<FitnessStore>()(
           },
         }))
       },
-
+      // TODO
       syncProgress: () => {
-        // Mock sync functionality
         set({ isLoading: true })
         setTimeout(() => {
           set({ isLoading: false })
@@ -249,7 +223,6 @@ export const useFitnessStore = create<FitnessStore>()(
       },
 
       loadMockData: () => {
-        // Migrate challenges to ensure participants is always an array
         const migratedChallenges = mockChallenges.map((challenge) => ({
           ...challenge,
           participants: Array.isArray(challenge.participants) ? challenge.participants : [],
@@ -259,14 +232,12 @@ export const useFitnessStore = create<FitnessStore>()(
           challenges: migratedChallenges,
         })
 
-        // Generate leaderboards for all challenges
         migratedChallenges.forEach((challenge) => {
           get().generateLeaderboard(challenge.id)
         })
       },
 
       resetStore: () => {
-        // Clear localStorage to remove any old cached data
         localStorage.removeItem('fitness-challenge-store')
         set(initialState)
       },

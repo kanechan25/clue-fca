@@ -1,14 +1,16 @@
-export const getTypeIcon = (type: string) => {
+import { ChallengeType } from '@/types'
+
+export const getTypeIcon = (type: ChallengeType) => {
   switch (type) {
-    case 'steps':
+    case ChallengeType.STEPS:
       return '🚶'
-    case 'distance':
+    case ChallengeType.DISTANCE:
       return '🏃'
-    case 'calories':
+    case ChallengeType.CALORIES:
       return '🔥'
-    case 'weight_loss':
+    case ChallengeType.WEIGHT_LOSS:
       return '⚖️'
-    case 'workout_time':
+    case ChallengeType.WORKOUT_TIME:
       return '💪'
     default:
       return '🎯'
@@ -17,15 +19,15 @@ export const getTypeIcon = (type: string) => {
 
 export const getTypeColor = (type: string) => {
   switch (type) {
-    case 'steps':
+    case ChallengeType.STEPS:
       return 'from-blue-500 to-blue-600'
-    case 'distance':
+    case ChallengeType.DISTANCE:
       return 'from-green-500 to-green-600'
-    case 'calories':
+    case ChallengeType.CALORIES:
       return 'from-red-500 to-red-600'
-    case 'weight_loss':
+    case ChallengeType.WEIGHT_LOSS:
       return 'from-purple-500 to-purple-600'
-    case 'workout_time':
+    case ChallengeType.WORKOUT_TIME:
       return 'from-orange-500 to-orange-600'
     default:
       return 'from-gray-500 to-gray-600'

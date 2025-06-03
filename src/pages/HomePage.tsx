@@ -4,20 +4,11 @@ import { Search, Filter, Trophy, Users, TrendingUp } from 'lucide-react'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ChallengeCard } from '@/components/ChallengeCard'
 import { UserSettings } from '@/components/UserSettings'
-import type { ChallengeType } from '@/types'
 import toast from 'react-hot-toast'
 import Dropdown from '@/components/Common/Dropdown'
 import { formatProgressWithUnit } from '@/utils/format'
-
-const filterOptions: { value: ChallengeType | 'all' | 'actives'; label: string; icon: string }[] = [
-  { value: 'all', label: 'All Challenges', icon: '🎯' },
-  { value: 'actives', label: 'All Actives', icon: '⭐' },
-  { value: 'steps', label: 'Steps', icon: '🚶' },
-  { value: 'distance', label: 'Running', icon: '🏃' },
-  { value: 'calories', label: 'Calories', icon: '🔥' },
-  { value: 'weight_loss', label: 'Weight Loss', icon: '⚖️' },
-  { value: 'workout_time', label: 'Workouts', icon: '💪' },
-]
+import { ChallengeType } from '@/types'
+import { filterOptions } from '@/constants/mock'
 
 const HomePage = () => {
   const { user, challenges, userProgress, loadMockData, generateLeaderboard } = useFitnessStore()
@@ -26,35 +17,27 @@ const HomePage = () => {
   const [selectedFilter, setSelectedFilter] = useState<ChallengeType | 'all' | 'actives'>('all')
   const [sortBy, setSortBy] = useState<'name' | 'participants' | 'recent'>('recent')
 
-  // Load mock data on mount
   useEffect(() => {
     if (challenges.length === 0) {
       loadMockData()
     }
   }, [challenges.length, loadMockData])
 
-  // Filter and sort challenges
   const filteredChallenges = useMemo(() => {
-    const filtered = challenges.filter((challenge) => {
+    const filtered = challenges?.filter((challenge) => {
       const matchesSearch =
         challenge.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         challenge.description.toLowerCase().includes(searchQuery.toLowerCase())
-
       let matchesFilter = false
       if (selectedFilter === 'all') {
         matchesFilter = true
       } else if (selectedFilter === 'actives') {
-        // Show only challenges the user has joined
         matchesFilter = !!userProgress[challenge.id]
       } else {
-        // Show challenges of specific type
         matchesFilter = challenge.type === selectedFilter
       }
-
       return matchesSearch && matchesFilter && challenge.isActive
     })
-
-    // Sort challenges
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'name':
@@ -80,7 +63,6 @@ const HomePage = () => {
     const challenge = challenges.find((c) => c.id === challengeId)
     if (challenge) {
       toast.success(`Joined "${challenge.name}"! 🎉`)
-      // Generate leaderboard for newly joined challenge
       generateLeaderboard(challengeId)
     }
   }

@@ -24,6 +24,14 @@ export enum Unit {
   POUNDS = 'lbs',
   MINUTES = 'minutes',
 }
+export enum ChallengeType {
+  STEPS = 'steps',
+  DISTANCE = 'distance',
+  CALORIES = 'calories',
+  WEIGHT_LOSS = 'weight_loss',
+  WORKOUT_TIME = 'workout_time',
+}
+
 export interface Challenge {
   id: string
   name: string
@@ -45,8 +53,6 @@ export interface ChallengeCardProps {
   onJoin?: (challengeId: string) => void
   onLeave?: (challengeId: string) => void
 }
-
-export type ChallengeType = 'steps' | 'distance' | 'calories' | 'weight_loss' | 'workout_time' | 'custom'
 
 export interface DailyProgress {
   date: string // YYYY-MM-DD format

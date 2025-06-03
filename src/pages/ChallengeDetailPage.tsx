@@ -1,23 +1,15 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Target, TrendingUp, Award, Share2 } from 'lucide-react'
+import { ArrowLeft, Target } from 'lucide-react'
 import { differenceInDays } from 'date-fns'
 import { useFitnessStore } from '@/stores/fitnessStore'
 import { ProgressSummary } from '@/components/ProgressSummary'
 import { Leaderboard } from '@/components/Leaderboard'
 import { DailyInputForm } from '@/components/DailyInputForm'
 import toast from 'react-hot-toast'
-
-const enum Tab {
-  Progress = 'progress',
-  Leaderboard = 'leaderboard',
-}
-
-const tabs = [
-  { id: Tab.Progress, label: 'Progress', icon: TrendingUp },
-  { id: Tab.Leaderboard, label: 'Leaderboard', icon: Award },
-]
+import { Sharing } from '@/components/Common/Sharing'
+import { Tab, tabs } from '@/constants'
 
 export const ChallengeDetailPage = () => {
   const { challengeId } = useParams<{ challengeId: string }>()
@@ -65,11 +57,6 @@ export const ChallengeDetailPage = () => {
       toast.success(`Joined "${challenge.name}"! 🎉`)
       generateLeaderboard(challengeId)
     }
-  }
-
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href)
-    toast.success('Link copied to clipboard!')
   }
 
   const renderTabContent = () => {
@@ -121,14 +108,8 @@ export const ChallengeDetailPage = () => {
               <ArrowLeft className='w-5 h-5' />
               <span>Back to Home</span>
             </button>
-
             <div className='flex items-center space-x-2'>
-              <button
-                onClick={handleShare}
-                className='p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors'
-              >
-                <Share2 className='w-5 h-5' />
-              </button>
+              <Sharing />
             </div>
           </div>
         </div>
